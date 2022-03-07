@@ -1,0 +1,9 @@
+Spēle: Tūrisma rallijs Liepāja 2022
+Autori: 
+  > Violete Nasire
+  > Vadims Žunda
+  > Vlads Rumjancevs
+Noteikumi:
+  ...///...
+
+Nospiež 'ENTER' lai spēlet mūsu spēle! :)
