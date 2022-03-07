@@ -1,29 +1,32 @@
 
 #include <iostream>
-#include <stdio.h>
-#include <windows.h>
-#include <conio.h>
+#include <stdio.h>              //
+#include <windows.h>            //!_убрать_!
+#include <conio.h>              //
 
-#pragma warning(disable:4996)
+#pragma warning(disable:4996)       //!_убрать_!
 
 using namespace std;
 
 void A1();
 void A2();
 
+    //Фунции
 
 
 int main()
 {
     A1();
-    while (true) 
+    while (true)                        
     {
         Sleep(5);
-        if (kbhit() != 0) break; 
+        if (kbhit() != 0) break;    //!_убрать_!
     }
 
     A2();
 }
+
+    //Пункты
 
 void A1()
 {
