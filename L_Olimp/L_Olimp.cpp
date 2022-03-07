@@ -3,21 +3,20 @@
 
 using namespace std;
 
-int main()
+void A1()
 {
-
-    char str[9];
-
+    char str[5];
     FILE* file;
+    fopen_s(&file, "1.txt", "rt");
 
-    fopen_s(&file, "1.txt", "r");
-
-
-
-    while (fgets(str, 8, file))
+    while (fgets(str, 4, file))
     {
         cout << str;
     }
     fclose(file);
+}
 
+int main()
+{
+    A1();
 }
