@@ -3,6 +3,15 @@
 
 using namespace std;
 
+void A1();
+void A2();
+
+int main()
+{
+    A1();
+    
+}
+
 void A1()
 {
     char str[5];
@@ -16,7 +25,7 @@ void A1()
     fclose(file);
 }
 
-int main()
+void A2()
 {
-    A1();
+
 }
