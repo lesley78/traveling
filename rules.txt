@@ -6,4 +6,4 @@ Autori:
 Noteikumi:
   ...///...
 
-Nospiež 'ENTER' lai spēlet mūsu spēle! :)
+Jānospiež 'ENTER' ,lai sāktu spēli! :)
