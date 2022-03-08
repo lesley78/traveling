@@ -9,7 +9,7 @@
 using namespace std;
 
 
-    // Фунции //
+// Фунции //
 
 int powInt(int N1, int N2) // Без негативных степеней
 {
@@ -37,15 +37,17 @@ int main()
 
 }
 
-    // Пункты //
+// Пункты //
 
 void A1()
 {
-    char str[3];
+    char str[4];
     FILE* file;
     fopen_s(&file, "1.txt", "rt");
 
-    while (fgets(str, 2, file))
+    if (!file) return;
+
+    while (fgets(str, 3, file))
     {
         cout << str;
     }
@@ -60,22 +62,23 @@ void A1()
 
 void A2()       //добавить ссылки на массивы из main
 {
-    
+
     char str[3];
-    char finder[7];
+    char finder[7] = "      ";
     bool isGettingId = false;
     bool isGettingType = false;
     bool isGettingX = false;
     bool isGettingY = false;
     int id = -1;
     int i = -1;
-    int objType[10];    //
-    int objX[10];       // !_перенести в main_!  (и оставить на них ссылку в параметрах функции)
-    int objY[10];       //
+    int objType[10] = { 0 };    //
+    int objX[10] = { 0 };       // !_перенести в main_!  (и оставить на них ссылку в параметрах функции)
+    int objY[10] = { 0 };       //
 
 
     FILE* file;
     fopen_s(&file, "2.txt", "rt");
+    if (!file) return;
     while (fgets(str, 2, file))
     {
         for (int i = 0; i < 5; i++)
@@ -185,9 +188,11 @@ void A2()       //добавить ссылки на массивы из main
         }
 
     }
+    fclose(file);
 
     for (int i = 0; i < 10; i++)
     {
+        if (objType[i] == 0) continue;
         cout << "\n" << objType[i] << "\t" << objX[i] << "\t" << objY[i];
     }
 
