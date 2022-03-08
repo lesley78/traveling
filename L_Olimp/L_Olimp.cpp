@@ -16,14 +16,12 @@ void A2();
 
 int main()
 {
-    A1();
-    while (true)                        
-    {
-        Sleep(5);
-        if (kbhit() != 0) break;    //!_убрать_!
-    }
+    //A1();
 
-    A2();
+
+    //A2();
+
+
 }
 
     //Пункты
@@ -39,6 +37,11 @@ void A1()
         cout << str;
     }
     fclose(file);
+    while (true)
+    {
+        Sleep(100);
+        if (kbhit() != 0) break;    //!_убрать_!
+    }
 }
 
 void A2()
