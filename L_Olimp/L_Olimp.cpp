@@ -9,7 +9,7 @@
 using namespace std;
 
 
-    //Фунции
+    // Фунции //
 
 int powInt(int N1, int N2) // Без негативных степеней
 {
@@ -22,8 +22,45 @@ int powInt(int N1, int N2) // Без негативных степеней
 }
 
 
-int getData(FILE* file_)    //добавить ссылки на массивы из main
+void A1();
+void A2();
+
+int main()
 {
+    //A1();
+
+    //int objType[10];
+    //int objX[10];
+    //int objY[10];
+
+    A2();
+
+}
+
+    // Пункты //
+
+void A1()
+{
+    char str[3];
+    FILE* file;
+    fopen_s(&file, "1.txt", "rt");
+
+    while (fgets(str, 2, file))
+    {
+        cout << str;
+    }
+    fclose(file);
+
+    while (true)
+    {
+        Sleep(100);
+        if (kbhit() != 0) break;    //!_убрать_!
+    }
+}
+
+void A2()       //добавить ссылки на массивы из main
+{
+    
     char str[3];
     char finder[7];
     bool isGettingId = false;
@@ -36,11 +73,14 @@ int getData(FILE* file_)    //добавить ссылки на массивы 
     int objX[10];       // !_перенести в main_!  (и оставить на них ссылку в параметрах функции)
     int objY[10];       //
 
-    while (fgets(str, 2, file_))
+
+    FILE* file;
+    fopen_s(&file, "2.txt", "rt");
+    while (fgets(str, 2, file))
     {
         for (int i = 0; i < 5; i++)
         {
-            finder[i] = finder[i+1];
+            finder[i] = finder[i + 1];
         }
         finder[5] = str[0];
 
@@ -52,7 +92,7 @@ int getData(FILE* file_)    //добавить ссылки на массивы 
                 i = 1;
                 id = (finder[5] - '0');
             }
-            else if  (finder[5] != '"')
+            else if (finder[5] != '"')
             {
                 id = id * 10;
                 id = id + (finder[5] - '0');
@@ -143,64 +183,12 @@ int getData(FILE* file_)    //добавить ссылки на массивы 
             isGettingX = false;
             isGettingY = true;
         }
-        
+
     }
 
     for (int i = 0; i < 10; i++)
     {
         cout << "\n" << objType[i] << "\t" << objX[i] << "\t" << objY[i];
     }
-
-
-    return 0;
-}
-
-
-void A1();
-void A2();
-
-
-
-int main()
-{
-    //A1();
-
-    //int objType[10];
-    //int objX[10];
-    //int objY[10];
-
-    A2();
-    //cout << powInt(10, 3);
-
-}
-
-    //Пункты
-
-void A1()
-{
-    char str[3];
-    FILE* file;
-    fopen_s(&file, "1.txt", "rt");
-
-    while (fgets(str, 2, file))
-    {
-
-        cout << str;
-        Sleep(1000);
-    }
-    fclose(file);
-
-    while (true)
-    {
-        Sleep(100);
-        if (kbhit() != 0) break;    //!_убрать_!
-    }
-}
-
-void A2()
-{
-    FILE* file;
-    fopen_s(&file, "2.txt", "rt");
-    cout << "\n\n" << getData(file);
 
 }
