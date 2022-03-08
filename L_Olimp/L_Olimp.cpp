@@ -7,8 +7,14 @@
 
 using namespace std;
 
+#define clear() printf("\033[H\033[J")
+#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
 
-// Фунции //
+
+const unsigned int X = 100;
+const unsigned int Y = 40;
+
+    // Фунции //
 
 int powInt(int N1, int N2) // Без негативных степеней
 {
@@ -20,13 +26,80 @@ int powInt(int N1, int N2) // Без негативных степеней
     return ret;
 }
 
+void SetWindow(int Width, int Height)
+{
+    _COORD coord;
+    coord.X = Width;
+    coord.Y = Height;
+
+    _SMALL_RECT Rect;
+    Rect.Top = 0;
+    Rect.Left = 0;
+    Rect.Bottom = Height - 1;
+    Rect.Right = Width - 1;
+
+    HANDLE Handle = GetStdHandle(STD_OUTPUT_HANDLE); Sleep(10);     // Get Handle 
+    SetConsoleScreenBufferSize(Handle, coord); Sleep(10);           // Set Buffer Size 
+    SetConsoleWindowInfo(Handle, TRUE, &Rect);                      // Set Window Size 
+    
+}
+
+void makeFrame()
+{
+    cout << "\n";
+    for (int iy = 0; iy < Y; iy++)
+    {
+        for (int ix = 0; ix < X; ix++)
+        {
+            if ((ix != 0 && ix != X - 1) && (iy == 0 || iy == Y - 1 || iy == (Y * 2) / 3))
+            {
+                cout << (char)205;
+            }
+            else if (ix == 0 && iy == (Y * 2) / 3)
+            {
+                cout << (char)204;
+            }
+            else if (ix == X - 1 && iy == (Y * 2) / 3)
+            {
+                cout << (char)185;
+            }
+            else if ((iy != 0 && iy != Y - 1) && (ix == 0 || ix == X - 1))
+            {
+                cout << (char)186;
+            }
+            else if (ix == 0 && iy == 0)
+            {
+                cout << (char)201;
+            }
+            else if (ix == X - 1 && iy == 0)
+            {
+                cout << (char)187;
+            }
+            else if (ix == X - 1 && iy == Y - 1)
+            {
+                cout << (char)188;
+            }
+            else if (ix == 0 && iy == Y - 1)
+            {
+                cout << (char)200;
+            }
+            else
+            {
+                cout << ' ';
+            }
+        }
+    }
+}
 
 void A1();
 void A2(int[], int[], int[]);
 
 int main()
 {
-    //A1();
+    SetWindow(X, Y);
+    A1();
+
+    makeFrame();
 
     int objType[10] = { 0 };
     int objX[10] = { 0 };
@@ -34,9 +107,13 @@ int main()
 
     A2(objType, objX, objY);
 
+    gotoxy(3, ((Y * 2) / 3) + 3);
+    cout << "How are you? ";
+    cin.get();
+
 }
 
-// Пункты //
+    // Пункты //
 
 void A1()
 {
@@ -52,24 +129,21 @@ void A1()
     }
     fclose(file);
 
-    while (true)
-    {
-        Sleep(100);
-        if (kbhit() != 0) break;    //!_убрать_!
-    }
+    while (!kbhit());       //!_убрать_!
 }
 
-void A2(int objType[], int objX[],int objY[]) 
+
+void A2(int objType[], int objX[], int objY[])
 {
 
     char str[3];
-    char finder[7] = "      ";
+    char finder[6] = "     ";
     bool isGettingId = false;
     bool isGettingType = false;
     bool isGettingX = false;
     bool isGettingY = false;
     int id = -1;
-    int i = -1;       
+    int i = -1;
 
 
     FILE* file;
@@ -186,7 +260,8 @@ void A2(int objType[], int objX[],int objY[])
     }
     fclose(file);
 
-    for (int i = 0; i < 10; i++)
+         //вкл/выкл проверку 1/0
+    for (int i = 0; i < 10 && 0; i++)
     {
         if (objType[i] == 0) continue;
         cout << "\n" << objType[i] << "\t" << objX[i] << "\t" << objY[i];
