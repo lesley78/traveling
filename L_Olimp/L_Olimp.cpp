@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stdio.h>              //
 #include <windows.h>            //!_убрать_!
@@ -23,17 +22,17 @@ int powInt(int N1, int N2) // Без негативных степеней
 
 
 void A1();
-void A2();
+void A2(int[], int[], int[]);
 
 int main()
 {
     //A1();
 
-    //int objType[10];
-    //int objX[10];
-    //int objY[10];
+    int objType[10] = { 0 };
+    int objX[10] = { 0 };
+    int objY[10] = { 0 };
 
-    A2();
+    A2(objType, objX, objY);
 
 }
 
@@ -60,7 +59,7 @@ void A1()
     }
 }
 
-void A2()       //добавить ссылки на массивы из main
+void A2(int objType[], int objX[],int objY[])       //добавить ссылки на массивы из main
 {
 
     char str[3];
@@ -70,10 +69,7 @@ void A2()       //добавить ссылки на массивы из main
     bool isGettingX = false;
     bool isGettingY = false;
     int id = -1;
-    int i = -1;
-    int objType[10] = { 0 };    //
-    int objX[10] = { 0 };       // !_перенести в main_!  (и оставить на них ссылку в параметрах функции)
-    int objY[10] = { 0 };       //
+    int i = -1;       
 
 
     FILE* file;
