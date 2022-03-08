@@ -1,9 +1,17 @@
-Spēle: Tūrisma rallijs Liepāja 2022
+Spēles Nosaukums: Tūrisma rallijs Liepāja 2022
+
 Autori: 
   > Violete Nasire
   > Vadims Žunda
   > Vlads Rumjancevs
+  
 Noteikumi:
-  ...///...
+  1. Spēlētājs dodas braucienā ar elektromašīnu. Lai ceļojums veiksmīgi paietu , jārūpējas par akumulatoru un jāiebrauc  uzpildes stacijās.
+  2. Labos laika apstākļos mašīna var nobraukt 140 km ,bet sliktajos 80 km.
+  3. Lai nokļūtu nākama kontrolpunkta jāievada vietas identifikators.
+  4. Katra no kontrolpunktiem būs uzdevums ar 3 atbilžu variantiem, par pareizo atbildi spēlētājs saņem bonuspunktus.
+  5. Lai pareizi atbildētu ir dotas 2 iespējas, par nepareizo atbildi iegustāmo bonuspunktu skaits samazinās.
+  6. Par bonuspunktiem spēletajs var apmaksāt lādešanu uzpildes stacijā.
+  7. Gadijumā ,kad mašīnai beidzas lādiņš jāizsauc evakuators. Evakuators pieprasis ladēšanas stacijas identifikatoru un maksu par apkalpošanu.(spēlētājam atņemas bonuspunkti)
 
 Jānospiež kaut ko ,lai sāktu spēli! :)
