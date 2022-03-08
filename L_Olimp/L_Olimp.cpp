@@ -59,7 +59,7 @@ void A1()
     }
 }
 
-void A2(int objType[], int objX[],int objY[])       //добавить ссылки на массивы из main
+void A2(int objType[], int objX[],int objY[]) 
 {
 
     char str[3];
