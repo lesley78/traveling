@@ -1,14 +1,18 @@
 Проверка получилась очень хорошая, поэтому можно писать комментарии почти где угодно.  
-  ID:"0" TYPE:"1" X:"34" Y:"65" даже тут
-  ID:"1" TYPE:"2" X:"14" Y:"19"
-  ID:"2" TYPE:"1" X:"2" Y:"8"
-  ID:"3" TYPE:"2" X:"75" Y:"4"
-  ID:"4" TYPE:"2" X:"8" Y:"32"
-  ID:"5" или тут TYPE:"0" X:"16" Y:"14"
-  ID:"6" TYPE:"1" X:"18" Y:"11"
-  ID:"7" TYPE:"2" X:"6" Y:"10"
-  ID:"8" TYPE:"1" X:"4" Y:"6"
-  или сдесь ID:"9" TYPE:"2" X:"9" Y:"8"
+  ID:"0"  TYPE:"1" 	NAME:"Pludmale"		IND:"Pl"	LONT:"56.4989" 	LATT:"20.9930" 
+  ID:"1"  TYPE:"1" 	NAME:"Slavas_Aleja"	IND:"SA"	LONT:"56.5067" 	LATT:"21.0120"
+  ID:"2"  TYPE:"1" 	NAME:"Him.skulpt." 	IND:"HS"	LONT:"56.5104" 	LATT:"21.0020"
+  ID:"3"  TYPE:"1" 	NAME:"Čak.Laukums" 	IND:"ČL"	LONT:"56.5038" 	LATT:"21.0055"
+  ID:"4"  TYPE:"1" 	NAME:"Rož.Laukums" 	IND:"RL"	LONT:"56.5081" 	LATT:"21.0116"
+  ID:"5"  TYPE:"1" 	NAME:"Koncertzāle"	IND:"Ko"	LONT:"56.5116" 	LATT:"21.0107"
+  ID:"6"  TYPE:"1" 	NAME:"Ziem.Mols" 	IND:"ZM"	LONT:"56.5576" 	LATT:"20.9995"
+  ID:"7"  TYPE:"1" 	NAME:"Spoku_Koks" 	IND:"SK"	LONT:"56.5065" 	LATT:"20.9955"
+  ID:"8"  TYPE:"1" 	NAME:"Katedrāle" 	IND:"Ka"	LONT:"56.5101" 	LATT:"21.0130"
+  ID:"9"  TYPE:"1" 	NAME:"Luter.Baz." 	IND:"LB" 	LONT:"56.5208" 	LATT:"21.0185"
+  ID:"10" TYPE:"2" 	NAME:"1.uzp.st." 	IND:"1" 	LONT:"56.5191" 	LATT:"21.0130"
+  ID:"11" TYPE:"2" 	NAME:"2.uzp.st." 	IND:"2" 	LONT:"56.5040" 	LATT:"21.0078"
+  ID:"12" TYPE:"2" 	NAME:"3.uzp.st." 	IND:"3"		LONT:"56.4838" 	LATT:"21.0067"
+  ID:"13" TYPE:"2" 	NAME:"1.uzp.st." 	IND:"4" 	LONT:"56.5322" 	LATT:"21.0477"
 главное не посреди данных
 
 PS id не обязательно писать по порядку
