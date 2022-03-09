@@ -76,7 +76,7 @@ void coutLV(char out[])
 }
 
 void A1();
-void A2(int[], int[], int[]);
+void A2(int[], float[], float[]);
 
 int main()
 {
@@ -88,10 +88,10 @@ int main()
     //makeFrame();
 
     int objType[10] = { 0 };
-    int objX[10] = { 0 };
-    int objY[10] = { 0 };
+    float objLongitude[10] = { 0 };
+    float objLatitude[10] = { 0 };
 
-    A2(objType, objX, objY);
+    A2(objType, objLongitude, objLatitude);
 
     /*gotoxy(3, ((Y * 2) / 3) + 3);
     cout << "How are you? ";
@@ -124,7 +124,7 @@ void A1()
 }
 
 
-void A2(int objType[], int objX[], int objY[])
+void A2(int objType[], float objLongitude[], float objLatitude[])
 {
     char str[3];
     char finder[16] = { };
@@ -143,8 +143,8 @@ void A2(int objType[], int objX[], int objY[])
 
         sscanf_s(finder, "ID:\x22%d\x22", &id);
         sscanf_s(finder, "TYPE:\x22%d\x22", &objType[id]);
-        sscanf_s(finder, "X:\x22%d\x22", &objX[id]);
-        sscanf_s(finder, "Y:\x22%d\x22", &objY[id]);
+        sscanf_s(finder, "LONT:\x22%f\x22", &objLongitude[id]);
+        sscanf_s(finder, "LATT:\x22%f\x22", &objLatitude[id]);
 
     }
     fclose(file);
@@ -153,7 +153,7 @@ void A2(int objType[], int objX[], int objY[])
     for (int i = 0; i < 10 && 1; i++)
     {
         if (objType[i] == 0) continue;
-        cout << "\n" << objType[i] << "\t" << objX[i] << "\t" << objY[i];
+        cout << "\n" << objType[i] << "\t" << objLongitude[i] << "\t" << objLatitude[i];
     }
 
 }
