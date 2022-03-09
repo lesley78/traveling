@@ -2,6 +2,8 @@
 #include <stdio.h>              //
 #include <windows.h>            //!_убрать_!
 #include <conio.h>              //
+#include <locale.h>
+#include <clocale>
 
 #pragma warning(disable:4996)       //!_убрать_!
 
@@ -11,8 +13,8 @@ using namespace std;
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
 
 
-const unsigned int X = 100;
-const unsigned int Y = 40;
+const unsigned int X = 100;     // Размер
+const unsigned int Y = 40;      // консоли
 
     // Фунции //
 
@@ -51,44 +53,26 @@ void makeFrame()
     {
         for (int ix = 0; ix < X; ix++)
         {
-            if ((ix != 0 && ix != X - 1) && (iy == 0 || iy == Y - 1 || iy == (Y * 2) / 3))
-            {
-                cout << (char)205;
-            }
-            else if (ix == 0 && iy == (Y * 2) / 3)
-            {
-                cout << (char)204;
-            }
-            else if (ix == X - 1 && iy == (Y * 2) / 3)
-            {
-                cout << (char)185;
-            }
-            else if ((iy != 0 && iy != Y - 1) && (ix == 0 || ix == X - 1))
-            {
-                cout << (char)186;
-            }
-            else if (ix == 0 && iy == 0)
-            {
-                cout << (char)201;
-            }
-            else if (ix == X - 1 && iy == 0)
-            {
-                cout << (char)187;
-            }
-            else if (ix == X - 1 && iy == Y - 1)
-            {
-                cout << (char)188;
-            }
-            else if (ix == 0 && iy == Y - 1)
-            {
-                cout << (char)200;
-            }
-            else
-            {
-                cout << ' ';
-            }
+            if ((ix != 0 && ix != X - 1) && (iy == 0 || iy == Y - 1 || iy == (Y * 2) / 3)) cout << (char)205;
+            else if (ix == 0 && iy == (Y * 2) / 3) cout << (char)204;
+            else if (ix == X - 1 && iy == (Y * 2) / 3) cout << (char)185;
+            else if ((iy != 0 && iy != Y - 1) && (ix == 0 || ix == X - 1)) cout << (char)186;
+            else if (ix == 0 && iy == 0) cout << (char)201;
+            else if (ix == X - 1 && iy == 0) cout << (char)187;
+            else if (ix == X - 1 && iy == Y - 1) cout << (char)188;
+            else if (ix == 0 && iy == Y - 1) cout << (char)200;
+            else cout << ' ';
         }
     }
+}
+
+void coutLV(char out[])
+{
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257);SetConsoleOutputCP(1257);
+    cout << out;
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
 void A1();
@@ -96,7 +80,9 @@ void A2(int[], int[], int[]);
 
 int main()
 {
+    
     SetWindow(X, Y);
+
     A1();
 
     makeFrame();
@@ -117,19 +103,24 @@ int main()
 
 void A1()
 {
-    char str[4];
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+    char str[17];
     FILE* file;
     fopen_s(&file, "1.txt", "rt");
 
     if (!file) return;
 
-    while (fgets(str, 3, file))
+    while (fgets(str, 16, file))
     {
         cout << str;
     }
     fclose(file);
 
     while (!kbhit());       //!_убрать_!
+    clear();
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
 
@@ -159,7 +150,6 @@ void A2(int objType[], int objX[], int objY[])
 
         if (isGettingId)
         {
-
             if (i == -1 && finder[5] != '"')
             {
                 i = 1;
@@ -180,7 +170,6 @@ void A2(int objType[], int objX[], int objY[])
 
         if (isGettingType && id != -1)
         {
-
             objType[id] = (finder[5] - '0');
             isGettingType = false;
         }
@@ -226,37 +215,13 @@ void A2(int objType[], int objX[], int objY[])
         }
 
         if (finder[2] == 'I' && finder[3] == 'D' && finder[4] == ':' && finder[5] == '"')
-        {
             isGettingId = true;
-            isGettingType = false;
-            isGettingX = false;
-            isGettingY = false;
-        }
-
         if (finder[0] == 'T' && finder[1] == 'Y' && finder[2] == 'P' && finder[3] == 'E' && finder[4] == ':' && finder[5] == '"')
-        {
-            isGettingId = false;
             isGettingType = true;
-            isGettingX = false;
-            isGettingY = false;
-        }
-
-        if (finder[3] == 'X' && finder[4] == ':' && finder[5] == '"')
-        {
-            isGettingId = false;
-            isGettingType = false;
+        if (finder[3] == 'X' && finder[4] == ':' && finder[5] == '"') 
             isGettingX = true;
-            isGettingY = false;
-        }
-
         if (finder[3] == 'Y' && finder[4] == ':' && finder[5] == '"')
-        {
-            isGettingId = false;
-            isGettingType = false;
-            isGettingX = false;
             isGettingY = true;
-        }
-
     }
     fclose(file);
 
