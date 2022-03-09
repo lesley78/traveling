@@ -11,7 +11,6 @@ using namespace std;
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-#define gotoxy_f(x,y) printf("\033[%d;%dH", (y), (x))
 
 const unsigned int X = 100;     // Размер
 const unsigned int Y = 40;      // консоли
@@ -77,9 +76,33 @@ void coutLV(char out[])
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
+float getDistance(float latitude1, float longitude1, float latitude2, float longitude2)
+{
+    float radius = 6371, rad = 3.14159265 / 180;
+    float latitude = abs((latitude2 - latitude1)) * rad;
+    float longitude = abs((longitude2 - longitude1)) * rad;
+    float rez = sin(latitude / 2) * sin(latitude / 2) + cos(latitude1 * rad) * cos(latitude2 * rad) * sin(longitude / 2) * sin(longitude / 2);
+    float d = 2 * radius * atan2(sqrt(rez), sqrt(1 - rez));
+    return d;
+}
+
+void fillDistanse(float objDistanse[][20], float objLongitude[], float objLatitude[], int objType[])
+{
+    for (int i = 0; objType[i] != 0; i++)
+    {
+        for (int j = 0; objType[j] != 0; j++)
+        {
+            if (i != j)
+            {
+                objDistanse[i][j] = getDistance(objLongitude[i], objLatitude[i], objLongitude[j], objLatitude[j]);
+            }
+        }
+    }
+}
+
 void A1();
 void A2(int[], float[], float[], char[][20], char[][5]);
-void A3(int[], float[], float[], char[][5]);
+void A3(int, int, int[], float[][20], char[][5]);
 
 int main()
 {
@@ -96,11 +119,14 @@ int main()
     char objNames[20][20] = { " " };
     char objIndex[20][5] = { " " };
 
-    setlocale(LC_ALL, "lv_LV.UTF-8");
-    SetConsoleCP(1257); SetConsoleOutputCP(1257);
-
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
-    A3(objType, objLongitude, objLatitude, objIndex);
+
+    float objDistanse[20][20] = { 0. };
+    fillDistanse(objDistanse, objLongitude, objLatitude, objType);
+
+    A3(2, 2, objType, objDistanse, objIndex);
+
+    gotoxy(3, ((Y * 2) / 3) + 3);
     //cout << "How are you? ";
     cin.get();
 
@@ -161,8 +187,8 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
     }
     fclose(file);
 
-    //вкл/выкл проверку 1/0
-    for (int i = 0; i < 14 && 1; i++)
+        //вкл/выкл проверку 1/0
+    for (int i = 0; i < 14 && 0; i++)
     {
         if (objType[i] == 0) continue;
         cout << "\n" << objType[i] << "\t" << objLongitude[i] << "\t" << objLatitude[i] << "\t" << objNames[i] << "\t" << objIndex[i];
@@ -173,20 +199,25 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
 
 }
 
-void A3(int objType[], float objLongitude[], float objLatitude[], char objIndex[][5])
+void A3(int x, int y, int objType[], float objDistanse[][20], char objIndex[][5])
 {
-    gotoxy_f(4, 4);
-    for (int iy = 1; iy <= ID_CNT + 1; iy++)
+    x = x + 1;
+    y = y + 1;
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+    gotoxy(x, y);
+    for (int iy = -1; iy < 10; iy++)
     {
-        for (int ix = 1; ix <= ID_CNT + 1; ix++)
+        for (int ix = -1; ix < 10; ix++)
         {
-            if (iy == ix) { cout << "X" << " "; continue; }
-            if (iy == 1 && objType[ix - 1] == 1) { cout << ix - 1 << " "; continue; }
-            else if (iy == 1 && objType[ix - 1] == 2) { cout << char(ix + 63) << " "; continue; } // char(ix + 64 )
-            if (ix == 1 && objType[iy - 1] == 1) { cout << iy - 1 << " "; continue; }
-            else if (ix == 1 && objType[iy - 1] == 2) { cout << char(iy + 63) << " "; continue; }
-            cout << " " << " ";
+            //Sleep(100);
+            if (iy == ix) { printf(" %c  ", 'X'); continue; }
+            if (iy == -1 ) { printf("%s  ", objIndex[ix]); continue; }
+            if (ix == -1 ) { printf("%s  ", objIndex[iy]); continue; }
+            printf("%.1f ", objDistanse[ix][iy]); continue; 
         }
-        gotoxy_f(4, 4 + iy);
+        gotoxy(x, y + 4 + 2*iy);
     }
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
