@@ -14,5 +14,5 @@ double getDistance(double latitude1, double longitude1, double latitude2, double
 }
 int main()
 {
-	cout << "Distance in km " << getDistance(32.17, -73.21, 34.77, -78.1) << endl;
+	cout << "Distance in km " << getDistance(32.17, -73.21, 34.77, -78.1) << endl; // видимо вторую координату надо будет передавать с "-" , дабы не делать модуль в действиях
 }
