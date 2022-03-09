@@ -78,8 +78,8 @@ void coutLV(char out[])
 }
 
 void A1();
-void A2(int[], int[], int[]);
-void A3(int[], int[], int[]);
+void A2(int[], float[], float[], char[][20], char[][5]);
+void A2(int[], float[], float[], char[][5]);
 
 int main()
 {
@@ -95,6 +95,9 @@ int main()
     float objLatitude[20] = { 0 };
     char objNames[20][20] = { " " };
     char objIndex[20][5] = { " " };
+
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
     A3(objType, objLongitude, objLatitude, objIndex);
