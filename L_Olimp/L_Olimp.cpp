@@ -43,7 +43,7 @@ void SetWindow(int Width, int Height)
     HANDLE Handle = GetStdHandle(STD_OUTPUT_HANDLE); Sleep(10);     // Get Handle 
     SetConsoleScreenBufferSize(Handle, coord); Sleep(10);           // Set Buffer Size 
     SetConsoleWindowInfo(Handle, TRUE, &Rect);                      // Set Window Size 
-    
+
 }
 
 void makeFrame()
@@ -69,7 +69,7 @@ void makeFrame()
 void coutLV(char out[])
 {
     setlocale(LC_ALL, "lv_LV.UTF-8");
-    SetConsoleCP(1257);SetConsoleOutputCP(1257);
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
     cout << out;
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
@@ -80,12 +80,12 @@ void A2(int[], int[], int[]);
 
 int main()
 {
-    
+
     SetWindow(X, Y);
 
-    A1();
+    //A1();
 
-    makeFrame();
+    //makeFrame();
 
     int objType[10] = { 0 };
     int objX[10] = { 0 };
@@ -93,13 +93,13 @@ int main()
 
     A2(objType, objX, objY);
 
-    gotoxy(3, ((Y * 2) / 3) + 3);
+    /*gotoxy(3, ((Y * 2) / 3) + 3);
     cout << "How are you? ";
-    cin.get();
+    cin.get();*/
 
 }
 
-    // Пункты //
+// Пункты //
 
 void A1()
 {
@@ -126,107 +126,31 @@ void A1()
 
 void A2(int objType[], int objX[], int objY[])
 {
-
     char str[3];
-    char finder[6] = "     ";
-    bool isGettingId = false;
-    bool isGettingType = false;
-    bool isGettingX = false;
-    bool isGettingY = false;
-    int id = -1;
-    int i = -1;
-
+    char finder[16] = { };
+    int id = 0;
 
     FILE* file;
     fopen_s(&file, "2.txt", "rt");
     if (!file) return;
     while (fgets(str, 2, file))
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 15; i++)
         {
             finder[i] = finder[i + 1];
         }
-        finder[5] = str[0];
+        finder[15] = str[0];
 
-        if (isGettingId)
-        {
-            if (i == -1 && finder[5] != '"')
-            {
-                i = 1;
-                id = (finder[5] - '0');
-            }
-            else if (finder[5] != '"')
-            {
-                id = id * 10;
-                id = id + (finder[5] - '0');
-            }
+        sscanf_s(finder, "ID:\x22%d\x22", &id);
+        sscanf_s(finder, "TYPE:\x22%d\x22", &objType[id]);
+        sscanf_s(finder, "X:\x22%d\x22", &objX[id]);
+        sscanf_s(finder, "Y:\x22%d\x22", &objY[id]);
 
-            if (finder[5] == '"')
-            {
-                i = -1;
-                isGettingId = false;
-            }
-        }
-
-        if (isGettingType && id != -1)
-        {
-            objType[id] = (finder[5] - '0');
-            isGettingType = false;
-        }
-
-        if (isGettingX)
-        {
-            if (i == -1 && finder[5] != '"')
-            {
-                i = 1;
-                objX[id] = (finder[5] - '0');
-            }
-            else if (finder[5] != '"')
-            {
-                objX[id] = objX[id] * 10;
-                objX[id] = objX[id] + (finder[5] - '0');
-            }
-
-            if (finder[5] == '"')
-            {
-                i = -1;
-                isGettingX = false;
-            }
-        }
-
-        if (isGettingY)
-        {
-            if (i == -1 && finder[5] != '"')
-            {
-                i = 1;
-                objY[id] = (finder[5] - '0');
-            }
-            else if (finder[5] != '"')
-            {
-                objY[id] = objY[id] * 10;
-                objY[id] = objY[id] + (finder[5] - '0');
-            }
-
-            if (finder[5] == '"')
-            {
-                i = -1;
-                isGettingY = false;
-            }
-        }
-
-        if (finder[2] == 'I' && finder[3] == 'D' && finder[4] == ':' && finder[5] == '"')
-            isGettingId = true;
-        if (finder[0] == 'T' && finder[1] == 'Y' && finder[2] == 'P' && finder[3] == 'E' && finder[4] == ':' && finder[5] == '"')
-            isGettingType = true;
-        if (finder[3] == 'X' && finder[4] == ':' && finder[5] == '"') 
-            isGettingX = true;
-        if (finder[3] == 'Y' && finder[4] == ':' && finder[5] == '"')
-            isGettingY = true;
     }
     fclose(file);
 
          //вкл/выкл проверку 1/0
-    for (int i = 0; i < 10 && 0; i++)
+    for (int i = 0; i < 10 && 1; i++)
     {
         if (objType[i] == 0) continue;
         cout << "\n" << objType[i] << "\t" << objX[i] << "\t" << objY[i];
