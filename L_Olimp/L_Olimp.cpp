@@ -76,22 +76,29 @@ void coutLV(char out[])
 }
 
 void A1();
-void A2(int[], float[], float[]);
+void A2(int[], float[], float[], char[][20], char[][5]);
 
 int main()
 {
 
-    SetWindow(X, Y);
+    //SetWindow(X, Y);
 
     //A1();
 
     //makeFrame();
 
-    int objType[10] = { 0 };
-    float objLongitude[10] = { 0 };
-    float objLatitude[10] = { 0 };
+    int objType[20] = { 0 };
+    float objLongitude[20] = { 0 };
+    float objLatitude[20] = { 0 };
+    char objNames[20][20] = { " " };
+    char objIndex[20][5] = { " " };
 
-    A2(objType, objLongitude, objLatitude);
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
+    //for (int i = 0; i < 256; i++) cout << i << "\t" << (char)i << "\n";
+
+    A2(objType, objLongitude, objLatitude, objNames, objIndex);
 
     /*gotoxy(3, ((Y * 2) / 3) + 3);
     cout << "How are you? ";
@@ -124,10 +131,13 @@ void A1()
 }
 
 
-void A2(int objType[], float objLongitude[], float objLatitude[])
+void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[][20], char objIndex[][5])
 {
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
     char str[3];
-    char finder[16] = { };
+    char finder[32] = { };
     int id = 0;
 
     FILE* file;
@@ -135,25 +145,30 @@ void A2(int objType[], float objLongitude[], float objLatitude[])
     if (!file) return;
     while (fgets(str, 2, file))
     {
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 31; i++)
         {
             finder[i] = finder[i + 1];
         }
-        finder[15] = str[0];
+        finder[31] = str[0];
 
         sscanf_s(finder, "ID:\x22%d\x22", &id);
         sscanf_s(finder, "TYPE:\x22%d\x22", &objType[id]);
         sscanf_s(finder, "LONT:\x22%f\x22", &objLongitude[id]);
         sscanf_s(finder, "LATT:\x22%f\x22", &objLatitude[id]);
+        sscanf_s(finder, "NAME:\x22%[^\x22]\x22", &objNames[id], 20);
+        sscanf_s(finder, "IND:\x22%[^\x22]\x22", &objIndex[id], 5);
 
     }
     fclose(file);
 
          //вкл/выкл проверку 1/0
-    for (int i = 0; i < 10 && 1; i++)
+    for (int i = 0; i < 14 && 1; i++)
     {
         if (objType[i] == 0) continue;
-        cout << "\n" << objType[i] << "\t" << objLongitude[i] << "\t" << objLatitude[i];
+        cout << "\n" << objType[i] << "\t" << objLongitude[i] << "\t" << objLatitude[i] << "\t" << objNames[i] << "\t" << objIndex[i];
     }
+
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 
 }
