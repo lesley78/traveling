@@ -79,7 +79,7 @@ void coutLV(char out[])
 
 void A1();
 void A2(int[], float[], float[], char[][20], char[][5]);
-void A2(int[], float[], float[], char[][5]);
+void A3(int[], float[], float[], char[][5]);
 
 int main()
 {
