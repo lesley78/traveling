@@ -11,10 +11,12 @@ using namespace std;
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-
+#define gotoxy_f(x,y) printf("\033[%d;%dH", (y), (x))
 
 const unsigned int X = 100;     // Размер
 const unsigned int Y = 40;      // консоли
+
+const unsigned int ID_CNT = 10; // количество ID в файле 
 
     // Фунции //
 
@@ -76,16 +78,17 @@ void coutLV(char out[])
 }
 
 void A1();
-void A2(int[], float[], float[], char[][20], char[][5]);
+void A2(int[], int[], int[]);
+void A3(int[], int[], int[]);
 
 int main()
 {
 
-    //SetWindow(X, Y);
+    SetWindow(X, Y);
 
-    //A1();
+    A1();
 
-    //makeFrame();
+    makeFrame();
 
     int objType[20] = { 0 };
     float objLongitude[20] = { 0 };
@@ -93,16 +96,10 @@ int main()
     char objNames[20][20] = { " " };
     char objIndex[20][5] = { " " };
 
-    setlocale(LC_ALL, "lv_LV.UTF-8");
-    SetConsoleCP(1257); SetConsoleOutputCP(1257);
-
-    //for (int i = 0; i < 256; i++) cout << i << "\t" << (char)i << "\n";
-
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
-
-    /*gotoxy(3, ((Y * 2) / 3) + 3);
-    cout << "How are you? ";
-    cin.get();*/
+    A3(objType, objLongitude, objLatitude, objIndex);
+    //cout << "How are you? ";
+    cin.get();
 
 }
 
@@ -161,7 +158,7 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
     }
     fclose(file);
 
-         //вкл/выкл проверку 1/0
+    //вкл/выкл проверку 1/0
     for (int i = 0; i < 14 && 1; i++)
     {
         if (objType[i] == 0) continue;
@@ -171,4 +168,22 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
 
+}
+
+void A3(int objType[], float objLongitude[], float objLatitude[], char objIndex[][5])
+{
+    gotoxy_f(4, 4);
+    for (int iy = 1; iy <= ID_CNT + 1; iy++)
+    {
+        for (int ix = 1; ix <= ID_CNT + 1; ix++)
+        {
+            if (iy == ix) { cout << "X" << " "; continue; }
+            if (iy == 1 && objType[ix - 1] == 1) { cout << ix - 1 << " "; continue; }
+            else if (iy == 1 && objType[ix - 1] == 2) { cout << char(ix + 63) << " "; continue; } // char(ix + 64 )
+            if (ix == 1 && objType[iy - 1] == 1) { cout << iy - 1 << " "; continue; }
+            else if (ix == 1 && objType[iy - 1] == 2) { cout << char(iy + 63) << " "; continue; }
+            cout << " " << " ";
+        }
+        gotoxy_f(4, 4 + iy);
+    }
 }
