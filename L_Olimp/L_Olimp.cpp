@@ -12,10 +12,12 @@ using namespace std;
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
 
-const unsigned int X = 100;     // Размер
-const unsigned int Y = 40;      // консоли
+const int objMaxNameLength = 20;
+const int objMaxIndexLength = 5;
+const int objCount = 14; // количество ID в файле 
 
-const unsigned int ID_CNT = 10; // количество ID в файле 
+const unsigned int X = 120;     // Размер
+const unsigned int Y = 2  + ((objCount * 2) - 1) + 3 + objCount + 2;      // консоли
 
     // Фунции //
 
@@ -31,6 +33,7 @@ int powInt(int N1, int N2) // Без негативных степеней
 
 void SetWindow(int Width, int Height)
 {
+    //API
     _COORD coord;
     coord.X = Width;
     coord.Y = Height;
@@ -86,11 +89,11 @@ float getDistance(float latitude1, float longitude1, float latitude2, float long
     return d;
 }
 
-void fillDistanse(float objDistanse[][20], float objLongitude[], float objLatitude[], int objType[])
+void fillDistanse(float objDistanse[][objCount], float objLongitude[], float objLatitude[], int objType[])
 {
-    for (int i = 0; objType[i] != 0; i++)
+    for (int i = 0; i < objCount; i++)
     {
-        for (int j = 0; objType[j] != 0; j++)
+        for (int j = 0; j < objCount; j++)
         {
             if (i != j)
             {
@@ -100,9 +103,19 @@ void fillDistanse(float objDistanse[][20], float objLongitude[], float objLatitu
     }
 }
 
+void gotoxyTop(int x, int y)
+{
+    gotoxy(x + 2, y + 2);
+}
+
+void gotoxyBot(int x, int y)
+{
+    gotoxy(x + 2, y + 4 + ((objCount * 2) - 1) + 3);
+}
+
 void A1();
-void A2(int[], float[], float[], char[][20], char[][5]);
-void A3(int, int, int[], float[][20], char[][5]);
+void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
+void A3(int, int, int[], float[][objCount], char[][objMaxIndexLength]);
 
 int main()
 {
@@ -113,21 +126,21 @@ int main()
 
     makeFrame();
 
-    int objType[20] = { 0 };
-    float objLongitude[20] = { 0 };
-    float objLatitude[20] = { 0 };
-    char objNames[20][20] = { " " };
-    char objIndex[20][5] = { " " };
+    int objType[objCount + 1] = { 0 };
+    float objLongitude[objCount + 1] = { 0 };
+    float objLatitude[objCount + 1] = { 0 };
+    char objNames[objCount][objMaxNameLength] = { " " };
+    char objIndex[objCount][objMaxIndexLength] = { " " };
 
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
 
-    float objDistanse[20][20] = { 0. };
+    float objDistanse[objCount][objCount] = { 0. };
     fillDistanse(objDistanse, objLongitude, objLatitude, objType);
 
     A3(2, 2, objType, objDistanse, objIndex);
 
-    gotoxy(3, ((Y * 2) / 3) + 3);
-    //cout << "How are you? ";
+    gotoxyBot(1, 1);
+    cout << "How are you? ";
     cin.get();
 
 }
@@ -157,7 +170,7 @@ void A1()
 }
 
 
-void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[][20], char objIndex[][5])
+void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[][objMaxNameLength], char objIndex[][objMaxIndexLength])
 {
     setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
@@ -177,17 +190,18 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
         }
         finder[31] = str[0];
 
-        sscanf_s(finder, "ID:\x22%d\x22", &id);
-        sscanf_s(finder, "TYPE:\x22%d\x22", &objType[id]);
-        sscanf_s(finder, "LONT:\x22%f\x22", &objLongitude[id]);
-        sscanf_s(finder, "LATT:\x22%f\x22", &objLatitude[id]);
-        sscanf_s(finder, "NAME:\x22%[^\x22]\x22", &objNames[id], 20);
-        sscanf_s(finder, "IND:\x22%[^\x22]\x22", &objIndex[id], 5);
-
+        sscanf_s(finder, "%*s ID:\x22%d\x22", &id);
+        sscanf_s(finder, "%*s TYPE:\x22%d\x22", &objType[id]);
+        sscanf_s(finder, "%*s LONT:\x22%f\x22", &objLongitude[id]);
+        sscanf_s(finder, "%*s LATT:\x22%f\x22", &objLatitude[id]);
+        sscanf_s(finder, "%*s NAME:\x22%[^\x22]\x22", &objNames[id], objMaxNameLength);
+        sscanf_s(finder, "%*s IND:\x22%[^\x22]\x22", &objIndex[id], objMaxIndexLength);
+        //cout << id << "\t" << objIndex[9] << "\t" << finder << endl;
+ 
     }
     fclose(file);
 
-        //вкл/выкл проверку 1/0
+    //вкл/выкл проверку 1/0
     for (int i = 0; i < 14 && 0; i++)
     {
         if (objType[i] == 0) continue;
@@ -199,24 +213,24 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
 
 }
 
-void A3(int x, int y, int objType[], float objDistanse[][20], char objIndex[][5])
+void A3(int x, int y, int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength])
 {
     x = x + 1;
     y = y + 1;
     setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
     gotoxy(x, y);
-    for (int iy = -1; iy < 10; iy++)
+    for (int iy = -1; iy < objCount ; iy++)
     {
-        for (int ix = -1; ix < 10; ix++)
+        for (int ix = -1; ix < objCount ; ix++)
         {
             //Sleep(100);
             if (iy == ix) { printf(" %c  ", 'X'); continue; }
-            if (iy == -1 ) { printf("%s  ", objIndex[ix]); continue; }
-            if (ix == -1 ) { printf("%s  ", objIndex[iy]); continue; }
-            printf("%.1f ", objDistanse[ix][iy]); continue; 
+            if (iy == -1) { printf("%s  ", objIndex[ix]); continue; }
+            if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
+            printf("%.1f ", objDistanse[ix][iy]); continue;
         }
-        gotoxy(x, y + 4 + 2*iy);
+        gotoxy(x, y + 4 + 2 * iy);
     }
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
