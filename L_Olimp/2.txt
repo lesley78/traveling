@@ -1,4 +1,3 @@
-Проверка получилась очень хорошая, поэтому можно писать комментарии почти где угодно.  
   ID:"0"  TYPE:"1" 	NAME:"Pludmale"		IND:"Pl"	LONT:"56,4989" 	LATT:"20,9930" 
   ID:"1"  TYPE:"1" 	NAME:"Slavas_Aleja"	IND:"SA"	LONT:"56,5067" 	LATT:"21,0120"
   ID:"2"  TYPE:"1" 	NAME:"Him.skulpt." 	IND:"HS"	LONT:"56,5104" 	LATT:"21,0020"
@@ -13,6 +12,3 @@
   ID:"11" TYPE:"2" 	NAME:"2.uzp.st." 	IND:"2" 	LONT:"56,5040" 	LATT:"21,0078"
   ID:"12" TYPE:"2" 	NAME:"3.uzp.st." 	IND:"3"		LONT:"56,4838" 	LATT:"21,0067"
   ID:"13" TYPE:"2" 	NAME:"1.uzp.st." 	IND:"4" 	LONT:"56,5322" 	LATT:"21,0477"
-главное не посреди данных
-
-PS id не обязательно писать по порядку
