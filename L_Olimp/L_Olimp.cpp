@@ -4,6 +4,7 @@
 #include <conio.h>              //
 #include <locale.h>
 #include <clocale>
+#include <cwchar>
 
 #pragma warning(disable:4996)       //!_убрать_!
 
@@ -14,9 +15,9 @@ using namespace std;
 
 const int objMaxNameLength = 20;
 const int objMaxIndexLength = 5;
-const int objCount = 14; // количество ID в файле 
+const int objCount = 20; // количество ID в файле 
 
-const unsigned int X = 120;     // Размер
+const unsigned int X = 160;     // Размер
 const unsigned int Y = 2  + ((objCount * 2) - 1) + 3 + objCount + 2;      // консоли
 
     // Фунции //
@@ -49,6 +50,7 @@ void SetWindow(int Width, int Height)
     SetConsoleWindowInfo(Handle, TRUE, &Rect);                      // Set Window Size 
 
 }
+
 
 void makeFrame()
 {
@@ -120,9 +122,20 @@ void A3(int, int, int[], float[][objCount], char[][objMaxIndexLength]);
 int main()
 {
 
-    SetWindow(X, Y);
+
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.nFont = 0;
+    cfi.dwFontSize.X = 0;                   // Width of each character in the font
+    cfi.dwFontSize.Y = 12;                  // Height
+    cfi.FontFamily = FF_DONTCARE;
+    cfi.FontWeight = FW_NORMAL;
+    std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 
     A1();
+
+    SetWindow(X, Y);
 
     makeFrame();
 
@@ -228,7 +241,7 @@ void A3(int x, int y, int objType[], float objDistanse[][objCount], char objInde
             if (iy == ix) { printf(" %c  ", 'X'); continue; }
             if (iy == -1) { printf("%s  ", objIndex[ix]); continue; }
             if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
-            printf("%.1f ", objDistanse[ix][iy]); continue;
+            printf("%.3f ", objDistanse[ix][iy]); continue;
         }
         gotoxy(x, y + 4 + 2 * iy);
     }
