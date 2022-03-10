@@ -11,4 +11,4 @@
   ID:"10" TYPE:"2" 	NAME:"1.uzp.st." 	IND:"1" 	LONT:"56,5191" 	LATT:"21,0130"
   ID:"11" TYPE:"2" 	NAME:"2.uzp.st." 	IND:"2" 	LONT:"56,5040" 	LATT:"21,0078"
   ID:"12" TYPE:"2" 	NAME:"3.uzp.st." 	IND:"3"		LONT:"56,4838" 	LATT:"21,0067"
-  ID:"13" TYPE:"2" 	NAME:"1.uzp.st." 	IND:"4" 	LONT:"56,5322" 	LATT:"21,0477"
+  ID:"13" TYPE:"2" 	NAME:"4.uzp.st." 	IND:"4" 	LONT:"56,5322" 	LATT:"21,0477"
