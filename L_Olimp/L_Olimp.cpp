@@ -1,12 +1,13 @@
 #include <iostream>
 #include <stdio.h>              //
-#include <windows.h>            //!_убрать_!
+#include <windows.h>            //!_??????_!
 #include <conio.h>              //
 #include <locale.h>
 #include <clocale>
 #include <cwchar>
+#include <iomanip>
 
-#pragma warning(disable:4996)       //!_убрать_!
+#pragma warning(disable:4996)       //!_??????_!
 
 using namespace std;
 
@@ -15,14 +16,15 @@ using namespace std;
 
 const int objMaxNameLength = 20;
 const int objMaxIndexLength = 5;
-const int objCount = 20; // количество ID в файле 
+const int objCount = 20; // ?????????? ID ? ????? 
+const int maxCharge = 140;
 
-const unsigned int X = 160;     // Размер
-const unsigned int Y = 2  + ((objCount * 2) - 1) + 3 + objCount + 2;      // консоли
+const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 32;                                                 // ??????
+const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;        // ???????
 
-    // Фунции //
+    // ????? //
 
-int powInt(int N1, int N2) // Без негативных степеней
+int powInt(int N1, int N2) // ??? ?????????? ????????
 {
     int ret = N1;
     for (int i = N2; i > 1; i--)
@@ -51,7 +53,6 @@ void SetWindow(int Width, int Height)
 
 }
 
-
 void makeFrame()
 {
     cout << "\n";
@@ -72,7 +73,7 @@ void makeFrame()
     }
 }
 
-void coutLV(char out[])
+void coutLV(const char out[])
 {
     setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
@@ -115,9 +116,216 @@ void gotoxyBot(int x, int y)
     gotoxy(x + 2, y + 4 + ((objCount * 2) - 1) + 3);
 }
 
+void music()
+{
+    while (1)
+    {
+        Beep(392, 350);
+        Sleep(120);
+        Beep(392, 350);
+        Sleep(120);
+        Beep(392, 350);
+        Sleep(70);
+        Beep(311, 250);
+        Sleep(70);
+        Beep(466, 100);
+        Sleep(70);
+        Beep(392, 350);
+        Sleep(70);
+        Beep(311, 250);
+        Sleep(70);
+        Beep(466, 100);
+        Sleep(70);
+        Beep(392, 700);
+        Sleep(120);
+        Beep(587, 350);
+        Sleep(120);
+        Beep(587, 350);
+        Sleep(120);
+        Beep(587, 350);
+        Sleep(80);
+        Beep(622, 250);
+        Sleep(70);
+        Beep(466, 100);
+        Sleep(70);
+        Beep(369, 350);
+        Sleep(70);
+        Beep(311, 250);
+        Sleep(70);
+        Beep(466, 100);
+        Sleep(200);
+        Beep(392, 700);
+        Sleep(70);
+        Beep(784, 350);
+        Sleep(50);
+        Beep(392, 250);
+        Sleep(50);
+        Beep(392, 100);
+        Sleep(50);
+        Beep(784, 350);
+        Sleep(30);
+        Beep(739, 250);
+        Sleep(30);
+        Beep(698, 100);
+        Sleep(30);
+        Beep(659, 100);
+        Sleep(30);
+        Beep(622, 100);
+        Sleep(30);
+        Beep(659, 450);
+        Sleep(120);
+        Beep(415, 150);
+        Sleep(70);
+        Beep(554, 350);
+        Sleep(70);
+        Beep(523, 250);
+        Sleep(30);
+        Beep(493, 100);
+        Sleep(30);
+        Beep(466, 100);
+        Sleep(30);
+        Beep(440, 100);
+        Sleep(30);
+        Beep(466, 450);
+        Sleep(30);
+        Beep(311, 150);
+        Sleep(70);
+        Beep(369, 350);
+        Sleep(70);
+        Beep(311, 250);
+        Sleep(30);
+        Beep(466, 100);
+        Sleep(70);
+        Beep(392, 750);
+        Sleep(1000);
+    }
+}
+
+void music2()
+{
+    while (1)
+    {
+        Beep(220, 300);
+        Beep(294, 300);
+        Beep(294, 300);
+        Beep(370, 300);
+        Beep(494, 300);
+        Beep(370, 300);
+        Beep(440, 800);
+        /* */
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(370, 300);
+        Beep(392, 300);
+        Beep(370, 300);
+        Beep(330, 800);
+        /* */
+        Beep(247, 300);
+        Beep(330, 300);
+        Beep(330, 300);
+        Beep(370, 300);
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(392, 800);
+        Beep(392, 300);
+        Beep(370, 300);
+        Beep(247, 800);
+        Beep(278, 300);
+        Beep(294, 300);
+        Beep(330, 2600);
+        /* */
+        Beep(220, 300);
+        Beep(294, 300);
+        Beep(294, 300);
+        Beep(370, 300);
+        Beep(494, 300);
+        Beep(370, 300);
+        Beep(440, 800);
+        /* */
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(370, 300);
+        Beep(392, 300);
+        Beep(370, 300);
+        Beep(330, 800);
+        /* */
+        Beep(247, 300);
+        Beep(330, 300);
+        Beep(330, 300);
+        Beep(370, 300);
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(392, 800);
+        Beep(392, 300);
+        Beep(370, 300);
+        Beep(278, 600);
+        Beep(330, 600);
+        Beep(294, 2600);
+        /*Reff : */
+        Beep(494, 300);
+        Beep(494, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(392, 200);
+        Beep(440, 200);
+        Beep(494, 200);
+        Beep(440, 800);
+        Beep(330, 300);
+        Beep(370, 300);
+        Beep(416, 300);
+        Beep(330, 300);
+        Beep(440, 2000);
+        /* */
+        Beep(494, 800);
+        Beep(440, 800);
+        Beep(392, 1600);
+        /* */
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(392, 1400);
+        /* */
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(370, 1100);
+        Beep(330, 300);
+        Beep(294, 1800);
+        /* */
+        Beep(494, 800);
+        Beep(440, 800);
+        Beep(392, 1600);
+        /* */
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(555, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(440, 300);
+        Beep(392, 1400);
+        /* */
+        Beep(440, 300);
+        Beep(494, 300);
+        Beep(370, 1100);
+        Beep(330, 300);
+        Beep(294, 1800);
+    }
+}
+
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
-void A3(int, int, int[], float[][objCount], char[][objMaxIndexLength]);
+void A3(int[], float[][objCount], char[][objMaxIndexLength]);
+void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
 
 int main()
 {
@@ -150,15 +358,36 @@ int main()
     float objDistanse[objCount][objCount] = { 0. };
     fillDistanse(objDistanse, objLongitude, objLatitude, objType);
 
-    A3(2, 2, objType, objDistanse, objIndex);
+    A3(objType, objDistanse, objIndex);
 
-    gotoxyBot(1, 1);
-    cout << "How are you? ";
-    cin.get();
+    //music2();
+
+    displayNames(objNames, objIndex);
+
+
+    float charge = maxCharge;
+    while (1)
+    {
+        gotoxyBot(1, 1);
+        cout << "How are you? ";
+        if (cin.get() == 'S') break;
+        gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
+        cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
+        charge = charge - 1.1;
+
+        gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
+        cout << "[";
+        for (int i = 0 ; i < X - (((objCount + 1) * 4) + 3 + 1) - 5 ; i ++)
+        {
+            if(i <= ((charge / (int)maxCharge)) * (X - (((objCount + 1) * 4) + 3 + 1) - 5)) cout << "|";
+            else cout << " ";
+        }
+        cout << "]";
+    }
 
 }
 
-// Пункты //
+// ?????? //
 
 void A1()
 {
@@ -176,12 +405,13 @@ void A1()
     }
     fclose(file);
 
-    while (!kbhit());       //!_убрать_!
+    cout << "";
+
+    while (!kbhit());       //!_??????_!
     clear();
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
-
 
 void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[][objMaxNameLength], char objIndex[][objMaxIndexLength])
 {
@@ -195,7 +425,7 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
     FILE* file;
     fopen_s(&file, "2.txt", "rt");
     if (!file) return;
-    while (fgets(str, 2, file))
+    while (fgets(str, 2, file) && id <= objCount)
     {
         for (int i = 0; i < 31; i++)
         {
@@ -209,12 +439,12 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
         sscanf_s(finder, "%*s LATT:\x22%f\x22", &objLatitude[id]);
         sscanf_s(finder, "%*s NAME:\x22%[^\x22]\x22", &objNames[id], objMaxNameLength);
         sscanf_s(finder, "%*s IND:\x22%[^\x22]\x22", &objIndex[id], objMaxIndexLength);
-        //cout << id << "\t" << objIndex[9] << "\t" << finder << endl;
- 
+        //cout << id << "\t" << objIndex[id] << "\t" << finder << endl;
+
     }
     fclose(file);
 
-    //вкл/выкл проверку 1/0
+    //???/???? ???????? 1/0
     for (int i = 0; i < 14 && 0; i++)
     {
         if (objType[i] == 0) continue;
@@ -226,24 +456,47 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
 
 }
 
-void A3(int x, int y, int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength])
+void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength])
 {
-    x = x + 1;
-    y = y + 1;
+
     setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
-    gotoxy(x, y);
-    for (int iy = -1; iy < objCount ; iy++)
+    gotoxyTop(1, 1);
+    for (int iy = -1; iy < objCount; iy++)
     {
-        for (int ix = -1; ix < objCount ; ix++)
+        for (int ix = -1; ix < objCount; ix++)
         {
             //Sleep(100);
-            if (iy == ix) { printf(" %c  ", 'X'); continue; }
+            /*if (iy == ix) { printf(" %c  ", 'X'); continue; }
             if (iy == -1) { printf("%s  ", objIndex[ix]); continue; }
             if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
-            printf("%.3f ", objDistanse[ix][iy]); continue;
+            printf("%.0f ", objDistanse[ix][iy]); continue;*/
+            if (iy == ix) { cout << setw(4) << "X "; continue; }
+            if (iy == -1) { cout << setw(4) << objIndex[ix]; continue; }
+            if (ix == -1) { cout << setw(4) << objIndex[iy]; continue; }
+            cout << setw(4) << (int)objDistanse[ix][iy];
         }
-        gotoxy(x, y + 4 + 2 * iy);
+        gotoxyTop(1, 1 + (2 * (iy + 2)));
+    }
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndexLength])
+{
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
+    int x = ((objCount + 1) * 4) + 3 + 1;
+    int y = 2 + 2 + 1;
+    for (int i = 0, counter = 0; i < objCount; i++)
+    {
+        gotoxyTop(x, y + (counter * 2));
+
+        if ((int)objIndex[i][0] >= (int)'0' && (int)objIndex[i][0] <= (int)'9' && (int)objIndex[i][1] >= (int)'0' && (int)objIndex[i][1] <= (int)'9') continue;
+        counter = counter + 1;
+        cout << objIndex[i] << " - " << objNames[i];
+
     }
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
