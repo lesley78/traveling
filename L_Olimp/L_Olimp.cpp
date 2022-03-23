@@ -426,9 +426,7 @@ int main()
     {
         charge = charge - distance(curPos, charge, objIndex, objDistanse);
         updCharge(charge);
-        updBot();
         bonusP = bonusP + question(objIndex);
-        updBot();
         if (cin.get() == 'S') break;
     }
 
@@ -556,7 +554,8 @@ int question(char objIndex[][objMaxIndexLength])
     int points = 10;
     char answer[8];
     while (1) {
-        gotoxyBot(2, 2);
+        updBot();
+        gotoxyBot(1, 1);
         cin >> answer;
         if (answer[0] == '3') return points;
         else if (points <= 0) points = points - 5;
@@ -570,6 +569,7 @@ float distance(int curPos, float charge, char objIndex[][objMaxIndexLength], flo
     int id;
     int bufferCurPos = curPos;
     while (1) {
+        updBot();
         gotoxyBot(1, 1);
         cin >> answer;
         id = findIndexId(answer, objIndex);
