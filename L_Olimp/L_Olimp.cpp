@@ -13,6 +13,7 @@ using namespace std;
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
+#define clearBot() printf("\033[%d;%dH\033[J", 4 + ((objCount * 2) - 1) + 3, 0)
 
 const int objMaxNameLength = 20;
 const int objMaxIndexLength = 5;
@@ -75,10 +76,19 @@ void makeFrame()
 
 void coutLV(const char out[])
 {
-    setlocale(LC_ALL, "lv_LV.UTF-8");
+    setlocale(LC_ALL, "Latvian");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
     cout << out;
     setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+void coutLV8(const char out[])
+{
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+    cout << out;
+    setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
@@ -322,10 +332,54 @@ void music2()
     }
 }
 
+int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
+{
+    for (int i = 0; i < objCount; i++) 
+    {
+        if (Index[0] == objIndex[i][0] && Index[1] == objIndex[i][1]) return i;
+    }
+    return -1;
+}
+
+void updCharge(float charge)
+{
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
+    cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
+    cout << "[";
+    for (int i = 0; i < X - (((objCount + 1) * 4) + 3 + 1) - 5; i++)
+    {
+        if (i <= ((charge / (int)maxCharge)) * (X - (((objCount + 1) * 4) + 3 + 1) - 5)) cout << "|";
+        else cout << " ";
+    }
+    cout << "]";
+}
+
+void updBot()
+{
+    clearBot();
+    gotoxy(0, 4 + ((objCount * 2) - 1) + 3);
+    for (int iy = 1 + ((Y * 2) / 3); iy < Y; iy++)
+    {
+        for (int ix = 0; ix < X; ix++)
+        {
+            if ((ix != 0 && ix != X - 1) && (iy == Y - 1)) cout << (char)205;
+            else if ((iy != 0 && iy != Y - 1) && (ix == 0 || ix == X - 1)) cout << (char)186;
+            else if (ix == X - 1 && iy == Y - 1) cout << (char)188;
+            else if (ix == 0 && iy == Y - 1) cout << (char)200;
+            else cout << ' ';
+        }
+    }
+
+}
+
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
 void A3(int[], float[][objCount], char[][objMaxIndexLength]);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
+int question(char[][objMaxIndexLength]);
+float distance(int, float, char[][objMaxIndexLength], float[][objCount]);
+
 
 int main()
 {
@@ -364,25 +418,18 @@ int main()
 
     displayNames(objNames, objIndex);
 
-
     float charge = maxCharge;
-    while (1)
+    int bonusP = 0;
+    int curPos = 0;
+    updCharge(charge);
+    while (1) 
     {
-        gotoxyBot(1, 1);
-        cout << "How are you? ";
+        charge = charge - distance(curPos, charge, objIndex, objDistanse);
+        updCharge(charge);
+        updBot();
+        bonusP = bonusP + question(objIndex);
+        updBot();
         if (cin.get() == 'S') break;
-        gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-        cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
-        charge = charge - 1.1;
-
-        gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
-        cout << "[";
-        for (int i = 0 ; i < X - (((objCount + 1) * 4) + 3 + 1) - 5 ; i ++)
-        {
-            if(i <= ((charge / (int)maxCharge)) * (X - (((objCount + 1) * 4) + 3 + 1) - 5)) cout << "|";
-            else cout << " ";
-        }
-        cout << "]";
     }
 
 }
@@ -489,9 +536,11 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
 
     int x = ((objCount + 1) * 4) + 3 + 1;
     int y = 2 + 2 + 1;
+    gotoxyTop(x, y);
+    coutLV8("99 - uzlādēšanas stacija");
     for (int i = 0, counter = 0; i < objCount; i++)
     {
-        gotoxyTop(x, y + (counter * 2));
+        gotoxyTop(x, 2 + y + (counter * 2));
 
         if ((int)objIndex[i][0] >= (int)'0' && (int)objIndex[i][0] <= (int)'9' && (int)objIndex[i][1] >= (int)'0' && (int)objIndex[i][1] <= (int)'9') continue;
         counter = counter + 1;
@@ -500,4 +549,35 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     }
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+int question(char objIndex[][objMaxIndexLength])
+{
+    int points = 10;
+    char answer[8];
+    while (1) {
+        gotoxyBot(2, 2);
+        cin >> answer;
+        if (answer[0] == '3') return points;
+        else if (points <= 0) points = points - 5;
+    }
+}
+
+float distance(int curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount])
+{
+    gotoxyBot(2, 2);
+    char answer[8];
+    int id;
+    int bufferCurPos = curPos;
+    while (1) {
+        gotoxyBot(1, 1);
+        cin >> answer;
+        id = findIndexId(answer, objIndex);
+        if (id == -1) continue;
+        if (charge - objDistanse[bufferCurPos][id] > 0)
+        {
+            curPos = id;
+            return objDistanse[bufferCurPos][id];
+        }
+    }
 }
