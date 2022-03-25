@@ -116,6 +116,11 @@ void fillDistanse(float objDistanse[][objCount], float objLongitude[], float obj
     }
 }
 
+void setTextColor(int Color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
+}
+
 void gotoxyTop(int x, int y)
 {
     gotoxy(x + 2, y + 2);
@@ -375,15 +380,34 @@ void updBot()
 
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
-void A3(int[], float[][objCount], char[][objMaxIndexLength]);
+void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
 int question(char[][objMaxIndexLength]);
-float distance(int, float, char[][objMaxIndexLength], float[][objCount]);
+float distance(int* , int, float, char[][objMaxIndexLength], float[][objCount]);
 
+void write(const int type, int* pinputY, bool* pdoCharge)
+{
+    switch (type) 
+    {
+        case 1:
+            gotoxyBot(1, 1);
+            cout << "Izvelieties galamerki";
+            break;
+        case 2:
+            gotoxyBot(1, 1);
+            cout << "vai velaties uzladeties?";
+            break;
+        case 3:
+            gotoxyBot(1, 1);
+            cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
+            break;
+    }
+    *pinputY = 2;
+}
 
 int main()
 {
-
+    setTextColor(15);
 
     CONSOLE_FONT_INFOEX cfi;
     cfi.cbSize = sizeof(cfi);
@@ -412,20 +436,36 @@ int main()
     float objDistanse[objCount][objCount] = { 0. };
     fillDistanse(objDistanse, objLongitude, objLatitude, objType);
 
-    A3(objType, objDistanse, objIndex);
+    int curPos = 0;
+    float charge = maxCharge;
+    A3(objType, objDistanse, objIndex, curPos, charge);
 
     //music2();
 
     displayNames(objNames, objIndex);
 
-    float charge = maxCharge;
-    int bonusP = 0;
-    int curPos = 0;
+    int bonusP = 50;
+    int* pCurPos = &curPos;
+
+    int inputY = 0;
+    int* pinputY = &inputY;
+
+    bool doCharge = false;
+    bool* pdoCharge = &doCharge;
+
+    int typeOfWrite = -1;
+
     updCharge(charge);
     while (1) 
     {
-        charge = charge - distance(curPos, charge, objIndex, objDistanse);
+        updBot();
+        write(1, pinputY, pdoCharge);
+        charge = charge - distance(pCurPos, curPos, charge, objIndex, objDistanse);
+        //gotoxy(2, 2); cout << curPos; gotoxyBot(1, 1);
+        A3(objType, objDistanse, objIndex, curPos, charge);
+        updBot();
         updCharge(charge);
+        write(3, pinputY, pdoCharge);
         bonusP = bonusP + question(objIndex);
         if (cin.get() == 'S') break;
     }
@@ -501,7 +541,7 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
 
 }
 
-void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength])
+void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength], int curPos, float charge)
 {
 
     setlocale(LC_ALL, "lv_LV.UTF-8");
@@ -516,10 +556,12 @@ void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInde
             if (iy == -1) { printf("%s  ", objIndex[ix]); continue; }
             if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
             printf("%.0f ", objDistanse[ix][iy]); continue;*/
-            if (iy == ix) { cout << setw(4) << "X "; continue; }
-            if (iy == -1) { cout << setw(4) << objIndex[ix]; continue; }
-            if (ix == -1) { cout << setw(4) << objIndex[iy]; continue; }
+            if (iy == ix) { if (iy == curPos && ix == curPos)  setTextColor(11); cout << setw(4) << "X "; if (iy == curPos && ix == curPos)  setTextColor(15); continue; }
+            if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos)  setTextColor(15); continue; }
+            if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos)  setTextColor(15); continue; }
+            if (charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos))  setTextColor(10);
             cout << setw(4) << (int)objDistanse[ix][iy];
+            if (charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos))  setTextColor(15);
         }
         gotoxyTop(1, 1 + (2 * (iy + 2)));
     }
@@ -535,7 +577,7 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     int x = ((objCount + 1) * 4) + 3 + 1;
     int y = 2 + 2 + 1;
     gotoxyTop(x, y);
-    coutLV8("99 - uzlādēšanas stacija");
+    coutLV8("99 - uzlвdзрanas stacija");
     for (int i = 0, counter = 0; i < objCount; i++)
     {
         gotoxyTop(x, 2 + y + (counter * 2));
@@ -554,30 +596,34 @@ int question(char objIndex[][objMaxIndexLength])
     int points = 10;
     char answer[8];
     while (1) {
-        updBot();
-        gotoxyBot(1, 1);
+
+        gotoxyBot(1, 3);
         cin >> answer;
         if (answer[0] == '3') return points;
         else if (points <= 0) points = points - 5;
     }
 }
 
-float distance(int curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount])
+float distance(int* pCurPos, int curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount])
 {
     gotoxyBot(2, 2);
     char answer[8];
     int id;
     int bufferCurPos = curPos;
+    
     while (1) {
-        updBot();
-        gotoxyBot(1, 1);
+        gotoxyBot(1, 3);
         cin >> answer;
         id = findIndexId(answer, objIndex);
         if (id == -1) continue;
+        //gotoxy(2, 2);cout << charge - objDistanse[bufferCurPos][id];gotoxyBot(1, 1);
         if (charge - objDistanse[bufferCurPos][id] > 0)
         {
-            curPos = id;
+            gotoxyBot(1, 3);
+            *pCurPos = id;
+            //gotoxy(2, 2); cout << curPos; gotoxyBot(1, 1);
             return objDistanse[bufferCurPos][id];
         }
+        else cout << "Nepielaujamie dati";
     }
 }
