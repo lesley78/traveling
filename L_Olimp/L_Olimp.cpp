@@ -415,6 +415,14 @@ bool canCharge(int curPos, char objIndex[][objMaxIndexLength])
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
+bool weather_random() { if (rand() % 10 == 0) return 1; return 0; }
+
+int exercise_random() {
+    int a = rand() % 3;
+    if (a == 0) return 0;
+    if (a == 1) return 1;
+    if (a == 2) return 2;
+}
 
 // прототипы Основных Функций
 
