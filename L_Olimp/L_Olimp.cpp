@@ -6,6 +6,7 @@
 #include <clocale>
 #include <cwchar>
 #include <iomanip>
+#include <ctime>
 
 #pragma warning(disable:4996)       //!_Убрать_!
 
@@ -372,6 +373,17 @@ int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
     return -1;
 }
 
+int length(int num)
+{
+    int counter = 0;
+    do
+    {
+        counter = counter + 1;
+        num = num / 10;
+    } while (num != 0);
+    return counter;
+}
+
 // обновляет показатели заряда и количество пунктов на экране
 void updInfo(float charge, int points)
 {
@@ -385,10 +397,10 @@ void updInfo(float charge, int points)
     cout << "]";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
-
+    cout << "Charge: " << setw(3) << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) ";
+   
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
-    cout << "Bonus Points: " << setw(5) << points;
+    cout << "Bonus Points: " << setw(length(points)) << points;
 }
 
 //
@@ -407,21 +419,24 @@ void setFontSize(int x, int y)
 
 bool canCharge(int curPos, char objIndex[][objMaxIndexLength])
 {
-    setlocale(LC_ALL, "lv_LV.UTF-8");
-    SetConsoleCP(1257); SetConsoleOutputCP(1257);
     if ((int)objIndex[curPos][0] >= (int)'0' && (int)objIndex[curPos][0] <= (int)'9' && (int)objIndex[curPos][1] >= (int)'0' && (int)objIndex[curPos][1] <= (int)'9') return true;
     else return false;
-    setlocale(LC_ALL, "C");
-    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+bool canDrive(float objDistanse[][objCount], int curPos, int charge)
+{
+    for (int i = 1;true;i++)
+    {
+        if (curPos + i < objCount && objDistanse[curPos][curPos + i] <= charge) return true;
+        if (curPos - i >= 0 && objDistanse[curPos][curPos - i] <= charge) return true;
+        if (curPos - i < 0 && curPos + i >= objCount) return false;
+    }
 }
 
 bool weather_random() { if (rand() % 10 == 0) return 1; return 0; }
 
 int exercise_random() {
-    int a = rand() % 3;
-    if (a == 0) return 0;
-    if (a == 1) return 1;
-    if (a == 2) return 2;
+    return (rand() % 3) + 1;
 }
 
 // прототипы Основных Функций
@@ -451,6 +466,7 @@ int main()
     char objIndex[objCount][objMaxIndexLength] = { " " };
     bool doCharge = false;
 
+    srand(time(NULL));
     //music2();
     setTextColor(15);
     setFontSize(0, 12);
@@ -479,11 +495,26 @@ int main()
 
         if (bonusP >= 10) if (canCharge(curPos, objIndex))
         {
-            write(2, &inputY);
-            tryCharge(inputY, &bonusP, &charge);
-            clearBotY(1);
-            updInfo(charge, bonusP);
-            A3(objType, objDistanse, objIndex, curPos, charge);
+            if (canDrive(objDistanse, curPos, charge))
+            {
+                write(2, &inputY);
+                tryCharge(inputY, &bonusP, &charge);
+                clearBotY(1);
+                updInfo(charge, bonusP);
+                A3(objType, objDistanse, objIndex, curPos, charge);
+            }
+            else
+            {
+                write(4, &inputY);
+                bonusP = bonusP - 10;
+                charge = maxCharge;
+                //scanf("%с");
+                gotoxyBot(1, inputY);
+                getch();
+                clearBotY(1);
+                updInfo(charge, bonusP);
+                A3(objType, objDistanse, objIndex, curPos, charge);
+            }
         }
 
         if (cin.get() == 'S') break;
@@ -511,7 +542,7 @@ void A1()
 
     cout << "";
 
-    while (!kbhit());       //!_??????_!
+    getch();
     clear();
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
@@ -635,7 +666,7 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
         cin >> answer;
         id = findIndexId(answer, objIndex);
         if (id == -1) continue;
-        if (charge - objDistanse[bufferCurPos][id] > 0)
+        if (charge - objDistanse[bufferCurPos][id] > 0 && bufferCurPos != id)
         {
             *curPos = id;
             return objDistanse[bufferCurPos][id];
@@ -646,6 +677,8 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
 
 void write(const int type, int* inputY)
 {
+    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251); SetConsoleOutputCP(1251);
     switch (type)
     {
     case 1:
@@ -663,7 +696,19 @@ void write(const int type, int* inputY)
         cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
         *inputY = 3;
         break;
+    case 4:
+        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на зарядку.";
+        gotoxyBot(1, 2); cout << "Нажмите Enter что-бы зарядится.";
+        *inputY = 4;
+        break;
+    case 5:
+        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора. ";
+        gotoxyBot(1, 2); cout << "Введите индекс ";
+        *inputY = 4;
+        break;
     }
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
 void tryCharge(int inputY, int* bonusP, float* charge)
