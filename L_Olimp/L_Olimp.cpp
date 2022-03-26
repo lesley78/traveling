@@ -372,11 +372,9 @@ int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
     return -1;
 }
 
-// обновляет показатели заряда на экране
-void updCharge(float charge)
+// обновляет показатели заряда и количество пунктов на экране
+void updInfo(float charge, int points)
 {
-    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
     cout << "[";
     for (int i = 0; i < X - (((objCount + 1) * 4) + 3 + 1) - 5; i++)
@@ -385,9 +383,40 @@ void updCharge(float charge)
         else cout << " ";
     }
     cout << "]";
+
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
+    cout << "Charge: " << setw(4) << 100 * (int)charge / (int)maxCharge << "%  " << "(" << (int)charge << "km) ";
+
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
+    cout << "Bonus Points: " << setw(5) << points;
 }
 
-// (как эти хреновины называются?)
+//
+void setFontSize(int x, int y)
+{
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.nFont = 0;
+    cfi.dwFontSize.X = x;                   // Width of each character in the font
+    cfi.dwFontSize.Y = y;                  // Height
+    cfi.FontFamily = FF_DONTCARE;
+    cfi.FontWeight = FW_NORMAL;
+    std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+}
+
+bool canCharge(int curPos, char objIndex[][objMaxIndexLength])
+{
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+    if ((int)objIndex[curPos][0] >= (int)'0' && (int)objIndex[curPos][0] <= (int)'9' && (int)objIndex[curPos][1] >= (int)'0' && (int)objIndex[curPos][1] <= (int)'9') return true;
+    else return false;
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+
+// прототипы Основных Функций
 
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
@@ -395,85 +424,60 @@ void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
 int question(char[][objMaxIndexLength],int);
 float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int);
-void write(const int type, int* inputY, bool* doCharge)
-{
-    switch (type) 
-    {
-        case 1:
-            gotoxyBot(1, 1);
-            cout << "Izvelieties galamerki";
-            break;
-        case 2:
-            gotoxyBot(1, 1);
-            cout << "vai velaties uzladeties?";
-            break;
-        case 3:
-            gotoxyBot(1, 1);
-            cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
-            break;
-    }
-    *inputY = 3;
-}
+void write(const int, int*);
+void tryCharge(int, int*, float*);
 
 int main()
 {
-    setTextColor(15);
-
-    CONSOLE_FONT_INFOEX cfi;
-    cfi.cbSize = sizeof(cfi);
-    cfi.nFont = 0;
-    cfi.dwFontSize.X = 0;                   // Width of each character in the font
-    cfi.dwFontSize.Y = 12;                  // Height
-    cfi.FontFamily = FF_DONTCARE;
-    cfi.FontWeight = FW_NORMAL;
-    std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
-    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
-
-    A1();
-
-    SetWindow(X, Y);
-
-    makeFrame();
 
     int objType[objCount + 1] = { 0 };
+    int curPos = 0;
+    int bonusP = 50;
+    int inputY = 1;
+    int typeOfWrite = -1;
     float objLongitude[objCount + 1] = { 0 };
     float objLatitude[objCount + 1] = { 0 };
+    float objDistanse[objCount][objCount] = { 0. };
+    float charge = maxCharge;
     char objNames[objCount][objMaxNameLength] = { " " };
     char objIndex[objCount][objMaxIndexLength] = { " " };
-
-    A2(objType, objLongitude, objLatitude, objNames, objIndex);
-
-    float objDistanse[objCount][objCount] = { 0. };
-    fillDistanse(objDistanse, objLongitude, objLatitude, objType);
-
-    int curPos = 0;
-    float charge = maxCharge;
-    A3(objType, objDistanse, objIndex, curPos, charge);
-
-    //music2();
-
-    displayNames(objNames, objIndex);
-
-    int bonusP = 50;
-
-    int inputY = 1;
-
     bool doCharge = false;
 
-    int typeOfWrite = -1;
+    //music2();
+    setTextColor(15);
+    setFontSize(0, 12);
+    
+    A1();
+    SetWindow(X, Y);
+    makeFrame();
+    A2(objType, objLongitude, objLatitude, objNames, objIndex);
+    fillDistanse(objDistanse, objLongitude, objLatitude, objType);
+    A3(objType, objDistanse, objIndex, curPos, charge);
+    displayNames(objNames, objIndex);
 
-    updCharge(charge);
+    updInfo(charge, bonusP);
     while (1) 
     {
-        clearBotY(1);
-        write(1, &inputY, &doCharge);
+        write(1, &inputY);
         charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY);
-        //gotoxy(2, 2); cout << curPos; gotoxyBot(1, 1);
         A3(objType, objDistanse, objIndex, curPos, charge);
         clearBotY(1);
-        updCharge(charge);
-        write(3, &inputY, &doCharge);
+        updInfo(charge, bonusP);
+
+        write(3, &inputY);
         bonusP = bonusP + question(objIndex, inputY);
+        clearBotY(1);
+        updInfo(charge, bonusP);
+
+        if (bonusP >= 10) if (canCharge(curPos, objIndex))
+        {
+            write(2, &inputY);
+            tryCharge(inputY, &bonusP, &charge);
+            clearBotY(1);
+            updInfo(charge, bonusP);
+            A3(objType, objDistanse, objIndex, curPos, charge);
+        }
+
         if (cin.get() == 'S') break;
     }
 
@@ -582,7 +586,7 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     int x = ((objCount + 1) * 4) + 3 + 1;
-    int y = 2 + 2 + 1;
+    int y = 2 + 2 + 3;
     gotoxyTop(x, y);
     coutLV8("99 - uzlвdзрanas stacija");
     for (int i = 0, counter = 0; i < objCount; i++)
@@ -603,11 +607,11 @@ int question(char objIndex[][objMaxIndexLength], int inputY)
     int points = 10;
     char answer[8];
     while (1) {
-
+        clearBotY(inputY);
         gotoxyBot(1, inputY);
         cin >> answer;
         if (answer[0] == '3') return points;
-        else if (points <= 0) points = points - 5;
+        else if (points > 0) points = points - 5; 
     }
 }
 
@@ -629,5 +633,44 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
             return objDistanse[bufferCurPos][id];
         }
         else { clearBotY(inputY); coutxyBot(1, inputY + 2 ,"Nepielaujamie dati"); }
+    }
+}
+
+void write(const int type, int* inputY)
+{
+    switch (type)
+    {
+    case 1:
+        gotoxyBot(1, 1);
+        cout << "Izvelieties galamerki";
+        *inputY = 3;
+        break;
+    case 2:
+        gotoxyBot(1, 1);
+        cout << "vai velaties uzladeties? (Y / N) (10BP)";
+        *inputY = 3;
+        break;
+    case 3:
+        gotoxyBot(1, 1);
+        cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
+        *inputY = 3;
+        break;
+    }
+}
+
+void tryCharge(int inputY, int* bonusP, float* charge)
+{
+    char answer[8];
+    while (1) {
+        gotoxyBot(1, inputY);
+        cin >> answer;
+        if (answer[0] == 'Y')
+        {
+            *bonusP = *bonusP - 10;
+            *charge = maxCharge;
+            return;
+        }
+        else if (answer[0] == 'N') return;
+        else { clearBotY(inputY); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); }
     }
 }
