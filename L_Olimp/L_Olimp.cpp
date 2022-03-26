@@ -1,30 +1,44 @@
 #include <iostream>
-#include <stdio.h>              //
-#include <windows.h>            //!_??????_!
-#include <conio.h>              //
+#include <stdio.h>              
+#include <windows.h>            
+#include <conio.h>              
 #include <locale.h>
 #include <clocale>
 #include <cwchar>
 #include <iomanip>
 
-#pragma warning(disable:4996)       //!_??????_!
+#pragma warning(disable:4996)       //!_Убрать_!
 
 using namespace std;
 
-#define clear() printf("\033[H\033[J")
-#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-#define clearBot() printf("\033[%d;%dH\033[J", 4 + ((objCount * 2) - 1) + 3, 0)
+const int objMaxNameLength = 20;    // максимальная длинна имени объекта
+const int objMaxIndexLength = 5;    // максимальная длинна индекса объекта
+const int objCount = 20;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
+const int maxCharge = 140;      // максимальный заряд машины (в км)
 
-const int objMaxNameLength = 20;
-const int objMaxIndexLength = 5;
-const int objCount = 20; // ?????????? ID ? ????? 
-const int maxCharge = 140;
+const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 32;               // размер экрана по X   
+const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // размер экрана по Y
 
-const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 32;                                                 // ??????
-const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;        // ???????
+#define clear() printf("\033[H\033[J")       // очистить всю консоль
+#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))     // переместить "курсор" на координату (x;y) (консоль)
+#define coutxy(x,y,text) printf("\033[%d;%dH%s", (y), (x) , (text))     // вывести текст в консоль на координате (x;y) 
+#define coutxyBot(x,y,text) printf("\033[%d;%dH%s", (y + 4 + ((objCount * 2) - 1) + 3), (x + 2) , (text))   // вывести текст в консоль на координате (x;y) в нижней части игрового экрана
 
-    // ????? //
+    // Функции //
 
+// очистить консоль С координаты (y) ДО конца в нижней части игрового экрана
+void clearBotY(int y)
+{
+    for (int i = 0; y + i + 2 + ((objCount * 2) - 1) + 3 < Y - 2; i++)
+    {
+        for (int j = 0; j < X - 4; j++)
+        {
+            coutxy(3 + j, y + i + 4 + ((objCount * 2) - 1) + 3, " ");
+        }
+    }
+}       
+
+// вычеслить степень (неиспользуется)
 int powInt(int N1, int N2) // ??? ?????????? ????????
 {
     int ret = N1;
@@ -35,6 +49,7 @@ int powInt(int N1, int N2) // ??? ?????????? ????????
     return ret;
 }
 
+// установить размер экрана (в символах)
 void SetWindow(int Width, int Height)
 {
     //API
@@ -54,6 +69,7 @@ void SetWindow(int Width, int Height)
 
 }
 
+// создать рамку
 void makeFrame()
 {
     cout << "\n";
@@ -74,6 +90,7 @@ void makeFrame()
     }
 }
 
+// cout но с локалью Latvian и возвратом на локаль C (неиспользуется)
 void coutLV(const char out[])
 {
     setlocale(LC_ALL, "Latvian");
@@ -83,6 +100,7 @@ void coutLV(const char out[])
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
+// cout но с локалью Latvian и возвратом на локаль lv_LV.UTF-8 (используется но 1 раз)
 void coutLV8(const char out[])
 {
     setlocale(LC_ALL, "Latvian");
@@ -92,6 +110,7 @@ void coutLV8(const char out[])
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
+// возвращает расстоякие (км) между 2-мя объектами, используя их реальные координаты
 float getDistance(float latitude1, float longitude1, float latitude2, float longitude2)
 {
     float radius = 6371, rad = 3.14159265 / 180;
@@ -102,6 +121,7 @@ float getDistance(float latitude1, float longitude1, float latitude2, float long
     return d;
 }
 
+// заполняет массив данными расстояний между объектами
 void fillDistanse(float objDistanse[][objCount], float objLongitude[], float objLatitude[], int objType[])
 {
     for (int i = 0; i < objCount; i++)
@@ -116,21 +136,25 @@ void fillDistanse(float objDistanse[][objCount], float objLongitude[], float obj
     }
 }
 
+// устанавливает цвет текста (int)
 void setTextColor(int Color)
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
 }
 
+// переместить "курсор" на координату (x;y) в верхней части игрового экрана
 void gotoxyTop(int x, int y)
 {
     gotoxy(x + 2, y + 2);
 }
 
+// переместить "курсор" на координату (x;y) в нижней части игрового экрана
 void gotoxyBot(int x, int y)
 {
     gotoxy(x + 2, y + 4 + ((objCount * 2) - 1) + 3);
 }
 
+// музыка (есть проблема)
 void music()
 {
     while (1)
@@ -216,6 +240,7 @@ void music()
     }
 }
 
+// музыка (есть проблема)
 void music2()
 {
     while (1)
@@ -337,6 +362,7 @@ void music2()
     }
 }
 
+// унаёт id объекта ипользуя его индекс
 int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
 {
     for (int i = 0; i < objCount; i++) 
@@ -346,6 +372,7 @@ int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
     return -1;
 }
 
+// обновляет показатели заряда на экране
 void updCharge(float charge)
 {
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
@@ -360,32 +387,15 @@ void updCharge(float charge)
     cout << "]";
 }
 
-void updBot()
-{
-    clearBot();
-    gotoxy(0, 4 + ((objCount * 2) - 1) + 3);
-    for (int iy = 1 + ((Y * 2) / 3); iy < Y; iy++)
-    {
-        for (int ix = 0; ix < X; ix++)
-        {
-            if ((ix != 0 && ix != X - 1) && (iy == Y - 1)) cout << (char)205;
-            else if ((iy != 0 && iy != Y - 1) && (ix == 0 || ix == X - 1)) cout << (char)186;
-            else if (ix == X - 1 && iy == Y - 1) cout << (char)188;
-            else if (ix == 0 && iy == Y - 1) cout << (char)200;
-            else cout << ' ';
-        }
-    }
-
-}
+// (как эти хреновины называются?)
 
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
 void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
-int question(char[][objMaxIndexLength]);
-float distance(int* , int, float, char[][objMaxIndexLength], float[][objCount]);
-
-void write(const int type, int* pinputY, bool* pdoCharge)
+int question(char[][objMaxIndexLength],int);
+float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int);
+void write(const int type, int* inputY, bool* doCharge)
 {
     switch (type) 
     {
@@ -402,7 +412,7 @@ void write(const int type, int* pinputY, bool* pdoCharge)
             cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
             break;
     }
-    *pinputY = 2;
+    *inputY = 3;
 }
 
 int main()
@@ -445,34 +455,31 @@ int main()
     displayNames(objNames, objIndex);
 
     int bonusP = 50;
-    int* pCurPos = &curPos;
 
-    int inputY = 0;
-    int* pinputY = &inputY;
+    int inputY = 1;
 
     bool doCharge = false;
-    bool* pdoCharge = &doCharge;
 
     int typeOfWrite = -1;
 
     updCharge(charge);
     while (1) 
     {
-        updBot();
-        write(1, pinputY, pdoCharge);
-        charge = charge - distance(pCurPos, curPos, charge, objIndex, objDistanse);
+        clearBotY(1);
+        write(1, &inputY, &doCharge);
+        charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY);
         //gotoxy(2, 2); cout << curPos; gotoxyBot(1, 1);
         A3(objType, objDistanse, objIndex, curPos, charge);
-        updBot();
+        clearBotY(1);
         updCharge(charge);
-        write(3, pinputY, pdoCharge);
-        bonusP = bonusP + question(objIndex);
+        write(3, &inputY, &doCharge);
+        bonusP = bonusP + question(objIndex, inputY);
         if (cin.get() == 'S') break;
     }
 
 }
 
-// ?????? //
+// Основные Функции //
 
 void A1()
 {
@@ -591,39 +598,36 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-int question(char objIndex[][objMaxIndexLength])
+int question(char objIndex[][objMaxIndexLength], int inputY)
 {
     int points = 10;
     char answer[8];
     while (1) {
 
-        gotoxyBot(1, 3);
+        gotoxyBot(1, inputY);
         cin >> answer;
         if (answer[0] == '3') return points;
         else if (points <= 0) points = points - 5;
     }
 }
 
-float distance(int* pCurPos, int curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount])
+float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY)
 {
     gotoxyBot(2, 2);
     char answer[8];
     int id;
-    int bufferCurPos = curPos;
+    int bufferCurPos = *curPos;
     
     while (1) {
-        gotoxyBot(1, 3);
+        gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
         if (id == -1) continue;
-        //gotoxy(2, 2);cout << charge - objDistanse[bufferCurPos][id];gotoxyBot(1, 1);
         if (charge - objDistanse[bufferCurPos][id] > 0)
         {
-            gotoxyBot(1, 3);
-            *pCurPos = id;
-            //gotoxy(2, 2); cout << curPos; gotoxyBot(1, 1);
+            *curPos = id;
             return objDistanse[bufferCurPos][id];
         }
-        else cout << "Nepielaujamie dati";
+        else { clearBotY(inputY); coutxyBot(1, inputY + 2 ,"Nepielaujamie dati"); }
     }
 }
