@@ -10,7 +10,7 @@
   ID:"9"  TYPE:"1" 	NAME:"CHANGE" 				IND:"10"	LONT:"56.50466542" 	LATT:"21.01079574"
   ID:"10" TYPE:"2" 	NAME:"Daugavpils M.Rotko centrs" 	IND:"DM"	LONT:"55.88388031" 	LATT:"26.49735499"
   ID:"11" TYPE:"2" 	NAME:"Līvānu stikla muzejs" 		IND:"LS"	LONT:"56.35561768" 	LATT:"26.16345822"
-  ID:"12" TYPE:"2" 	NAME:"A.Pumpura Lielvardes muzejs" 	IND:"LP"	LONT:"56.71139538" 	LATT:"24.83413114"
+  ID:"12" TYPE:"2" 	NAME:"A.Pumpura Lielvardes muzejs" 	IND:"PM"	LONT:"56.71139538" 	LATT:"24.83413114"
   ID:"13" TYPE:"2" 	NAME:"Zelmas maiznīca Lielvardē" 	IND:"ZM"	LONT:"56.72801207" 	LATT:"24.88707469"
   ID:"14" TYPE:"2" 	NAME:"Botāniskais dārzs Salaspillī" 	IND:"BD" 	LONT:"56.86387211" 	LATT:"24.35826811"
   ID:"15" TYPE:"2" 	NAME:"Rīgas motormuzejs" 		IND:"RM" 	LONT:"56.97058740" 	LATT:"24.22752864"
