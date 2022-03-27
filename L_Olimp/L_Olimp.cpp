@@ -16,6 +16,8 @@ const int objMaxNameLength = 20;    // максимальная длинна и�
 const int objMaxIndexLength = 5;    // максимальная длинна индекса объекта
 const int objCount = 20;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
 const int maxCharge = 140;      // максимальный заряд машины (в км)
+const int chargePrice = 10;
+const int evacuatorMinPrice = chargePrice + 50;
 
 const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 32;               // размер экрана по X   
 const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // размер экрана по Y
@@ -433,6 +435,34 @@ bool canDrive(float objDistanse[][objCount], int curPos, int charge)
     }
 }
 
+int nearestChargeStationId(char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int curPos)
+{
+    float distance = -1;
+    for (int i = 0; i < objCount ; i++)
+    {
+        if (canCharge(i, objIndex) && (distance == -1 || distance > objDistanse[curPos][i])) distance = objDistanse[curPos][i];
+    }
+    return distance;
+}
+
+bool namePrice(int price)
+{
+    char answer[8];
+    clearBotY(1);
+    gotoxyBot(1, 1); cout << "Эвакуация на эту точку будет стоить " << price << "BP.";
+    gotoxyBot(1, 2); cout << "Вас устраивает эта цена? (Y / N)";
+    while (1) {
+        gotoxyBot(1, 4);
+        cin >> answer;
+        if (answer[0] == 'Y')
+        {
+            return true;
+        }
+        else if (answer[0] == 'N') return false;
+        else { clearBotY(4); coutxyBot(1, 4 + 2, "Nepielaujamie dati"); }
+    }
+}
+
 bool weather_random() { if (rand() % 10 == 0) return 1; return 0; }
 
 int exercise_random() {
@@ -444,11 +474,13 @@ int exercise_random() {
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
 void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
+void A3b(int[], float[][objCount], char[][objMaxIndexLength], int, int);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
 int question(char[][objMaxIndexLength],int);
 float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int);
 void write(const int, int*);
 void tryCharge(int, int*, float*);
+int evacuator(int*, int, char[][objMaxIndexLength], float[][objCount], int);
 
 int main()
 {
@@ -465,6 +497,7 @@ int main()
     char objNames[objCount][objMaxNameLength] = { " " };
     char objIndex[objCount][objMaxIndexLength] = { " " };
     bool doCharge = false;
+    
 
     srand(time(NULL));
     //music2();
@@ -493,7 +526,7 @@ int main()
         clearBotY(1);
         updInfo(charge, bonusP);
 
-        if (bonusP >= 10) if (canCharge(curPos, objIndex))
+        if (canCharge(curPos, objIndex) && bonusP >= chargePrice)
         {
             if (canDrive(objDistanse, curPos, charge))
             {
@@ -506,15 +539,24 @@ int main()
             else
             {
                 write(4, &inputY);
-                bonusP = bonusP - 10;
+                bonusP = bonusP - chargePrice;
                 charge = maxCharge;
-                //scanf("%с");
                 gotoxyBot(1, inputY);
                 getch();
                 clearBotY(1);
                 updInfo(charge, bonusP);
                 A3(objType, objDistanse, objIndex, curPos, charge);
             }
+        }
+        else if (!canDrive(objDistanse, curPos, charge) && bonusP >= evacuatorMinPrice)
+        {
+            A3b(objType, objDistanse, objIndex, curPos, bonusP);
+            bonusP = bonusP - evacuator(&curPos, bonusP, objIndex, objDistanse, inputY);
+            charge = maxCharge;
+            clearBotY(1);
+            updInfo(charge, bonusP);
+            A3(objType, objDistanse, objIndex, curPos, charge);
+            
         }
 
         if (cin.get() == 'S') break;
@@ -619,6 +661,34 @@ void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInde
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
+void A3b(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength], int curPos, int bonusP)
+{
+
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+    gotoxyTop(1, 1);
+    for (int iy = -1; iy < objCount; iy++)
+    {
+        for (int ix = -1; ix < objCount; ix++)
+        {
+            //Sleep(100);
+            /*if (iy == ix) { printf(" %c  ", 'X'); continue; }
+            if (iy == -1) { printf("%s  ", objIndex[ix]); continue; }
+            if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
+            printf("%.0f ", objDistanse[ix][iy]); continue;*/
+            if (iy == ix) { if (iy == curPos && ix == curPos)  setTextColor(11); cout << setw(4) << "X "; if (iy == curPos && ix == curPos)  setTextColor(15); continue; }
+            if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos)  setTextColor(15); continue; }
+            if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos)  setTextColor(15); continue; }
+            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(13);
+            cout << setw(4) << (int)objDistanse[ix][iy];
+            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(15);
+        }
+        gotoxyTop(1, 1 + (2 * (iy + 2)));
+    }
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
 void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndexLength])
 {
     setlocale(LC_ALL, "lv_LV.UTF-8");
@@ -665,7 +735,7 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
         gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
-        if (id == -1) continue;
+        if (id == -1) { clearBotY(inputY); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
         if (charge - objDistanse[bufferCurPos][id] > 0 && bufferCurPos != id)
         {
             *curPos = id;
@@ -683,17 +753,17 @@ void write(const int type, int* inputY)
     {
     case 1:
         gotoxyBot(1, 1);
-        cout << "Izvelieties galamerki";
+        cout << "Выберите индекс следующего места назначения.";
         *inputY = 3;
         break;
     case 2:
         gotoxyBot(1, 1);
-        cout << "vai velaties uzladeties? (Y / N) (10BP)";
+        cout << "Хотите зарядить свой автомобиль? (Y / N) (" << chargePrice << "BP)";
         *inputY = 3;
         break;
     case 3:
         gotoxyBot(1, 1);
-        cout << "gfedjhtylkrsjhoitrjhrtj 3"; //для викторины
+        cout << "Вопрос.Вопрос!Вопрос?Вопрос?! (3)"; //для викторины
         *inputY = 3;
         break;
     case 4:
@@ -702,8 +772,8 @@ void write(const int type, int* inputY)
         *inputY = 4;
         break;
     case 5:
-        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора. ";
-        gotoxyBot(1, 2); cout << "Введите индекс ";
+        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора.";
+        gotoxyBot(1, 2); cout << "Введите индекс зарядной станции куда вы хотите отправится.";
         *inputY = 4;
         break;
     }
@@ -725,5 +795,29 @@ void tryCharge(int inputY, int* bonusP, float* charge)
         }
         else if (answer[0] == 'N') return;
         else { clearBotY(inputY); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); }
+    }
+}
+
+int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY)
+{
+    gotoxyBot(2, 2);
+    char answer[8];
+    int id = -1;
+    int bufferCurPos = *curPos;
+
+    while (1) {
+        write(5, &inputY);
+        gotoxyBot(1, inputY);
+        cin >> answer;
+        id = findIndexId(answer, objIndex);
+        if (id == -1) { clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == *curPos) { clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
+        {
+            if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice)) { *curPos = id; return evacuatorMinPrice; } }
+            else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice)) { *curPos = id; return evacuatorMinPrice; } }
+            else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice))) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
+        }
+        clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue;
     }
 }
