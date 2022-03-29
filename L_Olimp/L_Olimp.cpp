@@ -9,10 +9,11 @@
 #include <ctime>
 
 #pragma warning(disable:4996)       //!_Убрать_!
+#pragma warning(disable:C6031)
 
 using namespace std;
 
-const int objMaxNameLength = 20;    // максимальная длинна имени объекта
+const int objMaxNameLength = 48;    // максимальная длинна имени объекта
 const int objMaxIndexLength = 5;    // максимальная длинна индекса объекта
 const int objCount = 20;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
 const int maxCharge = 140;      // максимальный заряд машины (в км)
@@ -44,6 +45,7 @@ void clearBotY(int y)
 // вычеслить степень (неиспользуется)
 int powInt(int N1, int N2) // ??? ?????????? ????????
 {
+    if (N2 == 0) return 1;
     int ret = N1;
     for (int i = N2; i > 1; i--)
     {
@@ -402,7 +404,7 @@ void updInfo(float charge, int points)
     cout << "Charge: " << setw(3) << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) ";
    
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
-    cout << "Bonus Points: " << setw(length(points)) << points;
+    cout << "Bonus Points: " << setw(length(points)) << points << "     ";
 }
 
 //
@@ -445,6 +447,15 @@ int nearestChargeStationId(char objIndex[][objMaxIndexLength], float objDistanse
     return distance;
 }
 
+int random(int from, int to) {
+    return (rand() % (to + 1 - from)) + from;
+}
+
+int orRand(int num1, int num2) {
+    if (random(0, 1)) return num1;
+    else return num2;
+}
+
 bool namePrice(int price)
 {
     char answer[8];
@@ -465,10 +476,6 @@ bool namePrice(int price)
 
 bool weather_random() { if (rand() % 10 == 0) return 1; return 0; }
 
-int exercise_random() {
-    return (rand() % 3) + 1;
-}
-
 // прототипы Основных Функций
 
 void A1();
@@ -476,7 +483,7 @@ void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLen
 void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
 void A3b(int[], float[][objCount], char[][objMaxIndexLength], int, int);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
-int question(char[][objMaxIndexLength],int);
+int question(int, char[][objMaxIndexLength], int*, int[]);
 float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int);
 void write(const int, int*);
 void tryCharge(int, int*, float*);
@@ -497,6 +504,7 @@ int main()
     char objNames[objCount][objMaxNameLength] = { " " };
     char objIndex[objCount][objMaxIndexLength] = { " " };
     bool doCharge = false;
+    int answers[3] = { -1 , -1, -1};
     
 
     srand(time(NULL));
@@ -521,8 +529,15 @@ int main()
         clearBotY(1);
         updInfo(charge, bonusP);
 
-        write(3, &inputY);
-        bonusP = bonusP + question(objIndex, inputY);
+        //cout << "1";
+        answers[0] = -1; answers[1] = -1; answers[2] = -1;
+        while (true) {
+            if (answers[0] == -1) answers[0] = random(0, 2);
+            if (answers[1] == -1  || answers[1] == answers[0] || answers[1] == answers[2]) answers[1] = random(0, 2);
+            if (answers[2] == -1 || answers[2] == answers[0] || answers[2] == answers[1]) answers[2] = random(0, 2);
+            if (answers[0] != -1 && answers[1] != -1 && answers[2] != -1 && answers[0] != answers[1] && answers[1] != answers[2] && answers[2] != answers[0]) break;
+        }
+        bonusP = bonusP + question(curPos, objIndex, &inputY, answers);
         clearBotY(1);
         updInfo(charge, bonusP);
 
@@ -596,33 +611,70 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     char str[3];
-    char finder[32] = { };
+    char finder[12] = { };
     int id = 0;
+    bool reading[8] = { false };
+    bool isFract = false;
+    int counter = 0;
 
     FILE* file;
-    fopen_s(&file, "2.txt", "rt");
+    fopen_s(&file, "Open_Info/2.txt", "rt");
     if (!file) return;
     while (fgets(str, 2, file) && id <= objCount)
     {
-        for (int i = 0; i < 31; i++)
+        for (int i = 0; i < 11; i++)
         {
             finder[i] = finder[i + 1];
         }
-        finder[31] = str[0];
+        finder[11] = str[0];
 
-        sscanf_s(finder, "%*s ID:\x22%d\x22", &id);
-        sscanf_s(finder, "%*s TYPE:\x22%d\x22", &objType[id]);
-        sscanf_s(finder, "%*s LONT:\x22%f\x22", &objLongitude[id]);
-        sscanf_s(finder, "%*s LATT:\x22%f\x22", &objLatitude[id]);
-        sscanf_s(finder, "%*s NAME:\x22%[^\x22]\x22", &objNames[id], objMaxNameLength);
-        sscanf_s(finder, "%*s IND:\x22%[^\x22]\x22", &objIndex[id], objMaxIndexLength);
-        //cout << id << "\t" << objIndex[id] << "\t" << finder << endl;
+        //cout << finder << endl;Sleep(100);
+
+        if (reading[0]) { id = id * powInt(10, counter) + ((int)finder[3] - (int)'0'); counter = counter + 1;  if (finder[4] == '\x22') { reading[0] = false; counter = 0; } }
+        else if (finder[0] == 'I' && finder[1] == 'D' && finder[2] == ':' && finder[3] == '"') { reading[0] = true; id = 0; }
+
+        if (reading[1]) { objType[id] = ((int)finder[5] - (int)'0'); counter = counter + 1; if (finder[6] == '\x22') { reading[1] = false; counter = 0; } }
+        else if (finder[0] == 'T' && finder[1] == 'Y' && finder[2] == 'P' && finder[3] == 'E' && finder[4] == ':' && finder[5] == '"')reading[1] = true;
+
+        if (reading[2]) {
+            if (finder[5] == ',' || finder[5] == '.') { isFract = true; counter = 1; continue; }
+            if (!isFract) {
+                objLongitude[id] = objLongitude[id] * powInt(10, counter) + (float)finder[5] - (float)'0';
+                counter = counter + 1;
+            }
+            else {
+                objLongitude[id] = objLongitude[id] + ((float)finder[5] - (float)'0') / powInt(10, counter);
+                counter = counter + 1;
+            }
+            if (finder[6] == '\x22') { reading[2] = false; counter = 0; isFract = false;}}
+        else if (finder[0] == 'L' && finder[1] == 'O' && finder[2] == 'N' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"')reading[2] = true;
+
+        if (reading[3]) { 
+            if (finder[5] == ',' || finder[5] == '.') { isFract = true; counter = 1; continue;}
+            if (!isFract) {
+                objLatitude[id] = objLatitude[id] * powInt(10, counter) + (float)finder[5] - (float)'0';
+                counter = counter + 1;
+            }
+            else {
+                objLatitude[id] = objLatitude[id] + ((float)finder[5] - (float)'0') / powInt(10, counter);
+                counter = counter + 1;
+            }
+            if (finder[6] == '\x22') { reading[3] = false; counter = 0; isFract = false;}}
+        else if (finder[0] == 'L' && finder[1] == 'A' && finder[2] == 'T' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"')reading[3] = true;
+
+        if (reading[4]) { objNames[id][counter] = finder[5]; counter = counter + 1; if (finder[6] == '\x22') { reading[4] = false; counter = 0; }}
+        else if (finder[0] == 'N' && finder[1] == 'A' && finder[2] == 'M' && finder[3] == 'E' && finder[4] == ':' && finder[5] == '"')reading[4] = true;
+
+        if (reading[5]) { objIndex[id][counter] = finder[4]; counter = counter + 1; if (finder[5] == '\x22') { reading[5] = false; counter = 0; }}
+        else if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D'  && finder[3] == ':' && finder[4] == '"')reading[5] = true;
+
+        //cout << id << "\t" << objIndex[id] << "\t" << finder << endl; Sleep(10);
 
     }
     fclose(file);
 
     //???/???? ???????? 1/0
-    for (int i = 0; i < 14 && 0; i++)
+    for (int i = 0; i < objCount && 0; i++)
     {
         if (objType[i] == 0) continue;
         cout << "\n" << objType[i] << "\t" << objLongitude[i] << "\t" << objLatitude[i] << "\t" << objNames[i] << "\t" << objIndex[i];
@@ -711,17 +763,100 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-int question(char objIndex[][objMaxIndexLength], int inputY)
+int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answers[])
 {
+
+    setlocale(LC_ALL, "lv_LV.UTF-8");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
     int points = 10;
     char answer[8];
-    while (1) {
-        clearBotY(inputY);
-        gotoxyBot(1, inputY);
-        cin >> answer;
-        if (answer[0] == '3') return points;
-        else if (points > 0) points = points - 5; 
+    char str[3];
+    char finder[12] = { };
+    bool reading[8] = { false };
+    bool idFinded = false;
+    char charAnswers[3][64] = { 0 };
+    int counter = 0;
+
+    //cout << "2\n";
+
+    FILE* file;
+    fopen_s(&file, "Open_Info/questions.txt", "rt");
+    if (!file) return -1;
+    while (fgets(str, 2, file))
+    {
+        for (int i = 0; i < 11; i++)
+        {
+            finder[i] = finder[i + 1];
+        }
+        finder[11] = str[0];
+
+        //cout << finder << endl;Sleep(100);
+
+
+        //cout << "3\n";
+
+        if (finder[0] == 'I' && finder[1] == 'D' && finder[2] == ':' && finder[3] == '"' && finder[4] == (char)(id + '0') && finder[5] == '"') idFinded = true;
+     
+        if (idFinded)
+        {
+            //cout << "4\n";
+            if (reading[0]) { cout << finder[5]; if (finder[6] == '\x22') { reading[0] = false; cout << "\n\n"; } }
+            else if (finder[0] == 'J' && finder[1] == 'A' && finder[2] == 'U' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"') { reading[0] = true; gotoxyBot(1, 1);}
+
+
+            if (reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0;} }
+            else if (finder[0] == 'P' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[1] = true;
+
+
+            if (reading[2]) { charAnswers[1][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[2] = false; counter = 0;} }
+            else if (finder[0] == '2' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[2] = true;;
+
+
+            if (reading[3]) { charAnswers[2][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[3] = false; counter = 0; fclose(file); } }
+            else if (finder[0] == '3' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[3] = true;
+
+        }
+        //cout << "5\n";
+        
+
+        //cout << idFinded << "\t" << finder << endl; Sleep(10);
+
     }
+    fclose(file);
+
+    //cout << "6\n";
+
+    *inputY = 3;
+
+    gotoxyBot(1, *inputY);
+    cout << "a: ";
+    cout << charAnswers[answers[0]];
+    
+    gotoxyBot(1, *inputY + 2);
+    cout << "b: ";
+    cout << charAnswers[answers[1]];
+
+    gotoxyBot(1, *inputY + 4);
+    cout << "c: ";
+    cout << charAnswers[answers[2]];
+
+    *inputY = *inputY + 6;
+
+    while (1) {
+        gotoxyBot(1, *inputY);
+        cin >> answer;
+        if ((answer[0] == 'a' && answers[0] == 0) || (answer[0] == 'b' && answers[1] == 0) || (answer[0] == 'c' && answers[2] == 0))
+        {
+            return points;
+        }
+        else if (points > 0) points = points - 5;
+        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY); coutxyBot(1, *inputY + 2, "Неправильно, попробуте ещё раз"); }
+        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY); coutxyBot(1, *inputY + 2, "Nepielaujamie dati"); }
+    }
+
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
 float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY)
