@@ -9,18 +9,18 @@
 #include <ctime>
 
 #pragma warning(disable:4996)       //!_Убрать_!
-#pragma warning(disable:C6031)
 
 using namespace std;
 
 const int objMaxNameLength = 48;    // максимальная длинна имени объекта
 const int objMaxIndexLength = 5;    // максимальная длинна индекса объекта
-const int objCount = 20;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
+const int objCount = 22;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
 const int maxCharge = 140;      // максимальный заряд машины (в км)
+const int maxChargeRain = 80;
 const int chargePrice = 10;
 const int evacuatorMinPrice = chargePrice + 50;
 
-const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 32;               // размер экрана по X   
+const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 5 + 1;               // размер экрана по X   
 const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // размер экрана по Y
 
 #define clear() printf("\033[H\033[J")       // очистить всю консоль
@@ -31,7 +31,7 @@ const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // ра�
     // Функции //
 
 // очистить консоль С координаты (y) ДО конца в нижней части игрового экрана
-void clearBotY(int y)
+void clearBotY(int y, int X)
 {
     for (int i = 0; y + i + 2 + ((objCount * 2) - 1) + 3 < Y - 2; i++)
     {
@@ -75,7 +75,7 @@ void SetWindow(int Width, int Height)
 }
 
 // создать рамку
-void makeFrame()
+void makeFrame(const int X)
 {
     cout << "\n";
     for (int iy = 0; iy < Y; iy++)
@@ -159,215 +159,7 @@ void gotoxyBot(int x, int y)
     gotoxy(x + 2, y + 4 + ((objCount * 2) - 1) + 3);
 }
 
-// музыка (есть проблема)
-void music()
-{
-    while (1)
-    {
-        Beep(392, 350);
-        Sleep(120);
-        Beep(392, 350);
-        Sleep(120);
-        Beep(392, 350);
-        Sleep(70);
-        Beep(311, 250);
-        Sleep(70);
-        Beep(466, 100);
-        Sleep(70);
-        Beep(392, 350);
-        Sleep(70);
-        Beep(311, 250);
-        Sleep(70);
-        Beep(466, 100);
-        Sleep(70);
-        Beep(392, 700);
-        Sleep(120);
-        Beep(587, 350);
-        Sleep(120);
-        Beep(587, 350);
-        Sleep(120);
-        Beep(587, 350);
-        Sleep(80);
-        Beep(622, 250);
-        Sleep(70);
-        Beep(466, 100);
-        Sleep(70);
-        Beep(369, 350);
-        Sleep(70);
-        Beep(311, 250);
-        Sleep(70);
-        Beep(466, 100);
-        Sleep(200);
-        Beep(392, 700);
-        Sleep(70);
-        Beep(784, 350);
-        Sleep(50);
-        Beep(392, 250);
-        Sleep(50);
-        Beep(392, 100);
-        Sleep(50);
-        Beep(784, 350);
-        Sleep(30);
-        Beep(739, 250);
-        Sleep(30);
-        Beep(698, 100);
-        Sleep(30);
-        Beep(659, 100);
-        Sleep(30);
-        Beep(622, 100);
-        Sleep(30);
-        Beep(659, 450);
-        Sleep(120);
-        Beep(415, 150);
-        Sleep(70);
-        Beep(554, 350);
-        Sleep(70);
-        Beep(523, 250);
-        Sleep(30);
-        Beep(493, 100);
-        Sleep(30);
-        Beep(466, 100);
-        Sleep(30);
-        Beep(440, 100);
-        Sleep(30);
-        Beep(466, 450);
-        Sleep(30);
-        Beep(311, 150);
-        Sleep(70);
-        Beep(369, 350);
-        Sleep(70);
-        Beep(311, 250);
-        Sleep(30);
-        Beep(466, 100);
-        Sleep(70);
-        Beep(392, 750);
-        Sleep(1000);
-    }
-}
-
-// музыка (есть проблема)
-void music2()
-{
-    while (1)
-    {
-        Beep(220, 300);
-        Beep(294, 300);
-        Beep(294, 300);
-        Beep(370, 300);
-        Beep(494, 300);
-        Beep(370, 300);
-        Beep(440, 800);
-        /* */
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(370, 300);
-        Beep(392, 300);
-        Beep(370, 300);
-        Beep(330, 800);
-        /* */
-        Beep(247, 300);
-        Beep(330, 300);
-        Beep(330, 300);
-        Beep(370, 300);
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(392, 800);
-        Beep(392, 300);
-        Beep(370, 300);
-        Beep(247, 800);
-        Beep(278, 300);
-        Beep(294, 300);
-        Beep(330, 2600);
-        /* */
-        Beep(220, 300);
-        Beep(294, 300);
-        Beep(294, 300);
-        Beep(370, 300);
-        Beep(494, 300);
-        Beep(370, 300);
-        Beep(440, 800);
-        /* */
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(370, 300);
-        Beep(392, 300);
-        Beep(370, 300);
-        Beep(330, 800);
-        /* */
-        Beep(247, 300);
-        Beep(330, 300);
-        Beep(330, 300);
-        Beep(370, 300);
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(392, 800);
-        Beep(392, 300);
-        Beep(370, 300);
-        Beep(278, 600);
-        Beep(330, 600);
-        Beep(294, 2600);
-        /*Reff : */
-        Beep(494, 300);
-        Beep(494, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(392, 200);
-        Beep(440, 200);
-        Beep(494, 200);
-        Beep(440, 800);
-        Beep(330, 300);
-        Beep(370, 300);
-        Beep(416, 300);
-        Beep(330, 300);
-        Beep(440, 2000);
-        /* */
-        Beep(494, 800);
-        Beep(440, 800);
-        Beep(392, 1600);
-        /* */
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(392, 1400);
-        /* */
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(370, 1100);
-        Beep(330, 300);
-        Beep(294, 1800);
-        /* */
-        Beep(494, 800);
-        Beep(440, 800);
-        Beep(392, 1600);
-        /* */
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(555, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(440, 300);
-        Beep(392, 1400);
-        /* */
-        Beep(440, 300);
-        Beep(494, 300);
-        Beep(370, 1100);
-        Beep(330, 300);
-        Beep(294, 1800);
-    }
-}
-
-// унаёт id объекта ипользуя его индекс
+// узнаёт id объекта ипользуя его индекс
 int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
 {
     for (int i = 0; i < objCount; i++) 
@@ -386,25 +178,6 @@ int length(int num)
         num = num / 10;
     } while (num != 0);
     return counter;
-}
-
-// обновляет показатели заряда и количество пунктов на экране
-void updInfo(float charge, int points)
-{
-    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
-    cout << "[";
-    for (int i = 0; i < X - (((objCount + 1) * 4) + 3 + 1) - 5; i++)
-    {
-        if (i <= ((charge / (int)maxCharge)) * (X - (((objCount + 1) * 4) + 3 + 1) - 5)) cout << "|";
-        else cout << " ";
-    }
-    cout << "]";
-
-    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Charge: " << setw(3) << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) ";
-   
-    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
-    cout << "Bonus Points: " << setw(length(points)) << points << "     ";
 }
 
 //
@@ -456,10 +229,10 @@ int orRand(int num1, int num2) {
     else return num2;
 }
 
-bool namePrice(int price)
+bool namePrice(int price, int Xx)
 {
     char answer[8];
-    clearBotY(1);
+    clearBotY(1, Xx);
     gotoxyBot(1, 1); cout << "Эвакуация на эту точку будет стоить " << price << "BP.";
     gotoxyBot(1, 2); cout << "Вас устраивает эта цена? (Y / N)";
     while (1) {
@@ -470,66 +243,121 @@ bool namePrice(int price)
             return true;
         }
         else if (answer[0] == 'N') return false;
-        else { clearBotY(4); coutxyBot(1, 4 + 2, "Nepielaujamie dati"); }
+        else { clearBotY(4, Xx); coutxyBot(1, 4 + 2, "Nepielaujamie dati"); }
     }
 }
 
-bool weather_random() { if (rand() % 10 == 0) return 1; return 0; }
+int maxLengthInCharArray(char objNames[][objMaxNameLength])
+{
+    int outMax = 0;
+    for (int i = 0; i < objCount; i++)
+    {
+        for (int j = 0; ; j++)
+        {
+            if ((int)objNames[i][j] == 0) { if (j > outMax) outMax = j; break; }
+        }
+    }
+    return outMax;
+}
+
+// обновляет показатели заряда и количество пунктов на экране
+void updInfo(float charge, int points, int X, int weather)
+{
+    
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
+    cout << "[";
+    for (int i = 0; i < X - (((objCount + 1) * 4) + 3 + 1) - 5; i++)
+    {
+        if (i <= ((charge / (int)maxCharge)) * (X - (((objCount + 1) * 4) + 3 + 1) - 5)) cout << "|";
+        else cout << " ";
+    }
+    cout << "]";
+
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
+    cout << "                                      ";
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
+    cout << "Charge: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "km rain time)";
+
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
+    cout << "Bonus Points: " << setw(length(points)) << points << "     ";
+
+    gotoxyTop(((objCount + 1) * 4) + 3 + 1, 7);
+    cout << "Weather: ";
+    if (weather == 1) cout << setw(5) << "clear";
+    else cout << setw(5) << "rain";
+
+}
+
 
 // прототипы Основных Функций
 
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
-void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float);
+void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float,int);
 void A3b(int[], float[][objCount], char[][objMaxIndexLength], int, int);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
-int question(int, char[][objMaxIndexLength], int*, int[]);
-float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int);
+int question(int, char[][objMaxIndexLength], int*, int[], int);
+float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int, int);
 void write(const int, int*);
-void tryCharge(int, int*, float*);
-int evacuator(int*, int, char[][objMaxIndexLength], float[][objCount], int);
+void tryCharge(int, int*, float*, int);
+int evacuator(int*, int, char[][objMaxIndexLength], float[][objCount], int, int);
 
 int main()
 {
-
     int objType[objCount + 1] = { 0 };
+    int answers[3] = { -1 , -1, -1 };
     int curPos = 0;
     int bonusP = 50;
     int inputY = 1;
     int typeOfWrite = -1;
+    int weather = rand() % 2;
+    int old_weather = 0;
+    int counter = 0;
     float objLongitude[objCount + 1] = { 0 };
     float objLatitude[objCount + 1] = { 0 };
     float objDistanse[objCount][objCount] = { 0. };
     float charge = maxCharge;
-    char objNames[objCount][objMaxNameLength] = { " " };
-    char objIndex[objCount][objMaxIndexLength] = { " " };
+    float chance = 50;
+    char objNames[objCount][objMaxNameLength] = { (char)0 };
+    char objIndex[objCount][objMaxIndexLength] = { (char)0 };
     bool doCharge = false;
-    int answers[3] = { -1 , -1, -1};
-    
+
 
     srand(time(NULL));
-    //music2();
     setTextColor(15);
     setFontSize(0, 12);
-    
-    A1();
-    SetWindow(X, Y);
-    makeFrame();
+
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
+    const int Xx = X + maxLengthInCharArray(objNames);
+    A1();
+    SetWindow(Xx, Y);
+    makeFrame(Xx);
     fillDistanse(objDistanse, objLongitude, objLatitude, objType);
-    A3(objType, objDistanse, objIndex, curPos, charge);
+    A3(objType, objDistanse, objIndex, curPos, charge, weather);
     displayNames(objNames, objIndex);
 
-    updInfo(charge, bonusP);
+    updInfo(charge, bonusP, Xx, weather);
+
+    write(1, &inputY);
+    charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
+    A3(objType, objDistanse, objIndex, curPos, charge, weather);
+    clearBotY(1, Xx);
+    updInfo(charge, bonusP, Xx, weather);
+
     while (1) 
     {
-        write(1, &inputY);
-        charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY);
-        A3(objType, objDistanse, objIndex, curPos, charge);
-        clearBotY(1);
-        updInfo(charge, bonusP);
+        old_weather = weather;
 
-        //cout << "1";
+        if (random(1, 100) < chance) weather = 1;
+        else weather = 0;
+
+        if (old_weather == weather) counter = counter + 1;
+        else counter = 1;
+
+        if (weather == 1) chance = chance - 15. * (counter / (1. + (abs(50 - chance) / 25.)));
+        else chance = chance + 30. * (counter / (1. + (abs(50 - chance) / 25.)));
+
+
         answers[0] = -1; answers[1] = -1; answers[2] = -1;
         while (true) {
             if (answers[0] == -1) answers[0] = random(0, 2);
@@ -537,19 +365,19 @@ int main()
             if (answers[2] == -1 || answers[2] == answers[0] || answers[2] == answers[1]) answers[2] = random(0, 2);
             if (answers[0] != -1 && answers[1] != -1 && answers[2] != -1 && answers[0] != answers[1] && answers[1] != answers[2] && answers[2] != answers[0]) break;
         }
-        bonusP = bonusP + question(curPos, objIndex, &inputY, answers);
-        clearBotY(1);
-        updInfo(charge, bonusP);
+        bonusP = bonusP + question(curPos, objIndex, &inputY, answers, Xx);
+        clearBotY(1, Xx);
+        updInfo(charge, bonusP, Xx, weather);
 
         if (canCharge(curPos, objIndex) && bonusP >= chargePrice)
         {
             if (canDrive(objDistanse, curPos, charge))
             {
                 write(2, &inputY);
-                tryCharge(inputY, &bonusP, &charge);
-                clearBotY(1);
-                updInfo(charge, bonusP);
-                A3(objType, objDistanse, objIndex, curPos, charge);
+                tryCharge(inputY, &bonusP, &charge, Xx);
+                clearBotY(1, Xx);
+                updInfo(charge, bonusP, Xx, weather);
+                A3(objType, objDistanse, objIndex, curPos, charge, weather);
             }
             else
             {
@@ -558,21 +386,27 @@ int main()
                 charge = maxCharge;
                 gotoxyBot(1, inputY);
                 getch();
-                clearBotY(1);
-                updInfo(charge, bonusP);
-                A3(objType, objDistanse, objIndex, curPos, charge);
+                clearBotY(1, Xx);
+                updInfo(charge, bonusP, Xx, weather);
+                A3(objType, objDistanse, objIndex, curPos, charge, weather);
             }
         }
         else if (!canDrive(objDistanse, curPos, charge) && bonusP >= evacuatorMinPrice)
         {
             A3b(objType, objDistanse, objIndex, curPos, bonusP);
-            bonusP = bonusP - evacuator(&curPos, bonusP, objIndex, objDistanse, inputY);
+            bonusP = bonusP - evacuator(&curPos, bonusP, objIndex, objDistanse, inputY, Xx);
             charge = maxCharge;
-            clearBotY(1);
-            updInfo(charge, bonusP);
-            A3(objType, objDistanse, objIndex, curPos, charge);
+            clearBotY(1, Xx);
+            updInfo(charge, bonusP, Xx, weather);
+            A3(objType, objDistanse, objIndex, curPos, charge, weather);
             
         }
+
+        write(1, &inputY);
+        charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
+        A3(objType, objDistanse, objIndex, curPos, charge, weather);
+        clearBotY(1, Xx);
+        updInfo(charge, bonusP, Xx, weather);
 
         if (cin.get() == 'S') break;
     }
@@ -685,7 +519,7 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
 
 }
 
-void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength], int curPos, float charge)
+void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxIndexLength], int curPos, float charge, int weather)
 {
 
     setlocale(LC_ALL, "lv_LV.UTF-8");
@@ -703,9 +537,9 @@ void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInde
             if (iy == ix) { if (iy == curPos && ix == curPos)  setTextColor(11); cout << setw(4) << "X "; if (iy == curPos && ix == curPos)  setTextColor(15); continue; }
             if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos)  setTextColor(15); continue; }
             if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos)  setTextColor(15); continue; }
-            if (charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos))  setTextColor(10);
+            if ((charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 1) || ((charge / maxCharge * maxChargeRain) - objDistanse[curPos][iy] > 0 && (charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 0))  setTextColor(10);
             cout << setw(4) << (int)objDistanse[ix][iy];
-            if (charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos))  setTextColor(15);
+            if ((charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 1) || ((charge / maxCharge * maxChargeRain) - objDistanse[curPos][iy] > 0 && (charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 0))  setTextColor(15);
         }
         gotoxyTop(1, 1 + (2 * (iy + 2)));
     }
@@ -747,7 +581,7 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     int x = ((objCount + 1) * 4) + 3 + 1;
-    int y = 2 + 2 + 3;
+    int y = 2 + 2 + 5;
     gotoxyTop(x, y);
     coutLV8("99 - uzlвdзрanas stacija");
     for (int i = 0, counter = 0; i < objCount; i++)
@@ -763,7 +597,7 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answers[])
+int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int answers[], int Xx)
 {
 
     setlocale(LC_ALL, "lv_LV.UTF-8");
@@ -778,11 +612,11 @@ int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answer
     char charAnswers[3][64] = { 0 };
     int counter = 0;
 
-    //cout << "2\n";
-
     FILE* file;
     fopen_s(&file, "Open_Info/questions.txt", "rt");
     if (!file) return -1;
+
+    *inputY = 1;
     while (fgets(str, 2, file))
     {
         for (int i = 0; i < 11; i++)
@@ -791,18 +625,13 @@ int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answer
         }
         finder[11] = str[0];
 
-        //cout << finder << endl;Sleep(100);
 
-
-        //cout << "3\n";
-
-        if (finder[0] == 'I' && finder[1] == 'D' && finder[2] == ':' && finder[3] == '"' && finder[4] == (char)(id + '0') && finder[5] == '"') idFinded = true;
+        if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D' && finder[3] == ':' && finder[4] == '"' && finder[5] == objIndex[curPos][0] && finder[6] == objIndex[curPos][1] && finder[7] == '"') idFinded = true;
      
         if (idFinded)
         {
-            //cout << "4\n";
-            if (reading[0]) { cout << finder[5]; if (finder[6] == '\x22') { reading[0] = false; cout << "\n\n"; } }
-            else if (finder[0] == 'J' && finder[1] == 'A' && finder[2] == 'U' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"') { reading[0] = true; gotoxyBot(1, 1);}
+            if (reading[0]) { cout << finder[5]; if (finder[5] == ' ' && counter >= Xx - 4 - 10) { gotoxyBot(1, *inputY + 1); counter = 0; *inputY = *inputY + 1; } counter = counter + 1; if (finder[6] == '\x22') { reading[0] = false; counter = 0; *inputY = *inputY + 2; } }
+            else if (finder[0] == 'J' && finder[1] == 'A' && finder[2] == 'U' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"') { reading[0] = true; gotoxyBot(1, *inputY);}
 
 
             if (reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0;} }
@@ -817,17 +646,11 @@ int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answer
             else if (finder[0] == '3' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[3] = true;
 
         }
-        //cout << "5\n";
-        
 
         //cout << idFinded << "\t" << finder << endl; Sleep(10);
 
     }
     fclose(file);
-
-    //cout << "6\n";
-
-    *inputY = 3;
 
     gotoxyBot(1, *inputY);
     cout << "a: ";
@@ -851,15 +674,15 @@ int question(int id, char objIndex[][objMaxIndexLength], int* inputY, int answer
             return points;
         }
         else if (points > 0) points = points - 5;
-        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY); coutxyBot(1, *inputY + 2, "Неправильно, попробуте ещё раз"); }
-        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY); coutxyBot(1, *inputY + 2, "Nepielaujamie dati"); }
+        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Неправильно, попробуте ещё раз"); }
+        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepielaujamie dati"); }
     }
 
     setlocale(LC_ALL, "C");
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY)
+float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY, int Xx)
 {
     gotoxyBot(2, 2);
     char answer[8];
@@ -870,13 +693,13 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
         gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
-        if (id == -1) { clearBotY(inputY); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == -1) { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
         if (charge - objDistanse[bufferCurPos][id] > 0 && bufferCurPos != id)
         {
             *curPos = id;
             return objDistanse[bufferCurPos][id];
         }
-        else { clearBotY(inputY); coutxyBot(1, inputY + 2 ,"Nepielaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2 ,"Nepielaujamie dati"); }
     }
 }
 
@@ -916,7 +739,7 @@ void write(const int type, int* inputY)
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-void tryCharge(int inputY, int* bonusP, float* charge)
+void tryCharge(int inputY, int* bonusP, float* charge, int Xx)
 {
     char answer[8];
     while (1) {
@@ -929,11 +752,11 @@ void tryCharge(int inputY, int* bonusP, float* charge)
             return;
         }
         else if (answer[0] == 'N') return;
-        else { clearBotY(inputY); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); }
     }
 }
 
-int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY)
+int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int inputY, int Xx)
 {
     gotoxyBot(2, 2);
     char answer[8];
@@ -945,14 +768,14 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
         gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
-        if (id == -1) { clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
-        if (id == *curPos) { clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
         if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
         {
-            if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice)) { *curPos = id; return evacuatorMinPrice; } }
-            else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice)) { *curPos = id; return evacuatorMinPrice; } }
-            else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice))) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
+            if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
+            else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
+            else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice), Xx)) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
         }
-        clearBotY(1); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue;
+        clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue;
     }
 }
