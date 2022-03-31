@@ -18,7 +18,7 @@ const int objCount = 21;        // количество ID в файле (пот
 const int maxCharge = 140;      // максимальный заряд машины (в км)
 const int maxChargeRain = 80;
 const int chargePrice = 10;
-const int evacuatorMinPrice = chargePrice + 50;
+const int evacuatorMinPrice = chargePrice + 40;
 
 const unsigned int X = 2 + ((objCount + 1) * 4) + 2 + 5 + 1;               // размер экрана по X   
 const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // размер экрана по Y
@@ -471,29 +471,59 @@ int main()
 void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int startTime)
 {
     int y = 30;
-    int x = 3*y;
+    int x = 3 * y;
     int newTime = time(NULL);
-    setlocale(LC_ALL, "Russian");
-    SetConsoleCP(1251); SetConsoleOutputCP(1251);
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     clear();
     setFontSize(0, 18);
     SetWindow(x, y);
 
-    if (win) coutMiddled(x / 2, 3, "Jūs uzvarejāt! :)");
-    else coutMiddled(x / 2, 3, "Jūs zaudejāt! :(");
+    if (win) coutMiddled(x / 2, 3, "Jыs uzvarejвt! :)");
+    else
+    {
+        coutMiddled(x / 2, 3, "Jыs zaudejвt! :(");
+        Beep(130, 100);
+        Beep(262, 100);
+        Beep(330, 100);
+        Beep(392, 100);
+        Beep(523, 100);
+        Beep(660, 100);
+        Beep(784, 300);
+        Beep(660, 300);
+        Beep(146, 100);
+        Beep(262, 100);
+        Beep(311, 100);
+        Beep(415, 100);
+        Beep(523, 100);
+        Beep(622, 100);
+        Beep(831, 300);
+        Beep(622, 300);
+        Beep(155, 100);
+        Beep(294, 100);
+        Beep(349, 100);
+        Beep(466, 100);
+        Beep(588, 100);
+        Beep(699, 100);
+        Beep(933, 300);
+        Beep(933, 100);
+        Beep(933, 100);
+        Beep(933, 100);
+        Beep(1047, 400);
+    }
 
-    coutxy(2, 6,  "Liels paldies jums, ka spēlējāt mūsu spēli! ");
-    coutxy(2, 8,  "Statistika:");
-    coutxy(2, 9,  "Palika bonuspunktu:................."); cout << bonusP << "BP";
-    coutxy(2, 10, "Tik bonuspunktu jūs ieguvat:..."); 
-    coutxy(2, 11, "Palika lādiņa:..........................."); cout << 100. * charge/maxCharge << "% (" << charge << "km)";
-    coutxy(2, 12, "Tik lādiņa jūs paterejāt spēlēs laikā:..............");
-    coutxy(2, 13, "Laiks pavadīts spēlē:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
+    coutxy(2, 6, "Liels paldies jums, ka spзlзjвt mыsu spзli! ");
+    coutxy(2, 8, "Statistika:");
+    coutxy(2, 9, "Palika bonuspunktu:................."); cout << bonusP << "BP";
+    coutxy(2, 10, "Tik bonuspunktu jыs ieguvat:...");
+    coutxy(2, 11, "Palika lвdiņa:..........................."); cout << 100. * charge / maxCharge << "% (" << charge << "km)";
+    coutxy(2, 12, "Tik lвdiņa jыs paterejвt spзlзs laikв:..............");
+    coutxy(2, 13, "Laiks pavadоts spзlз:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
     char name[32];
-    coutxy(2, 15, "Ievadiet savu vārdu (līdz 16 simboliem) - "); cin >> name;
+    coutxy(2, 15, "Ievadiet savu vвrdu (lоdz 16 simboliem) - "); cin >> name;
 
-    
+
     char wNames[10][16];
     int Stats[10][3];
 
@@ -502,8 +532,8 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
     if (!file) return;
     fscanf_s(file, "1( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n2( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n3( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n4( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n5( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n6( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n7( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n8( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n9( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n10( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)", &wNames[0], 16, &Stats[0][0], &Stats[0][1], &Stats[0][2], &wNames[1], 16, &Stats[1][0], &Stats[1][1], &Stats[1][2], &wNames[2], 16, &Stats[2][0], &Stats[2][1], &Stats[2][2], &wNames[3], 16, &Stats[3][0], &Stats[3][1], &Stats[3][2], &wNames[4], 16, &Stats[4][0], &Stats[4][1], &Stats[4][2], &wNames[5], 16, &Stats[5][0], &Stats[5][1], &Stats[5][2], &wNames[6], 16, &Stats[6][0], &Stats[6][1], &Stats[6][2], &wNames[7], 16, &Stats[7][0], &Stats[7][1], &Stats[7][2], &wNames[8], 16, &Stats[8][0], &Stats[8][1], &Stats[8][2], &wNames[9], 16, &Stats[9][0], &Stats[9][1], &Stats[9][2]);
     fclose(file);
-    
-    if (win) 
+
+    if (win)
     {
         for (int i = 0; i < 10; i++)
         {
@@ -537,9 +567,9 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
 
         fclose(file);
     }
-    
 
-    coutxy(2, 17, "Nospiediet Enter ,lai redzētu labāko 10 spēļu topu"); getch();
+
+    coutxy(2, 17, "Nospiediet Enter ,lai redzзtu labвko 10 spзļu topu"); getch();
 
     clear();
     for (int i = 0; i < 10; i++)
@@ -675,7 +705,7 @@ void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInde
 
             if (((ix != -1) && (iy == -1)) && (((charge - objDistanse[ix][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0) && weather == 0)))  setTextColor(10);
             if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos || (((ix != -1) && (iy == -1)) && (((charge - objDistanse[ix][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0) && weather == 0))))  setTextColor(15); continue; }
-            
+
             if (((iy != -1) && (ix == -1)) && (((charge - objDistanse[iy][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[iy][curPos] > 0) && weather == 0)))  setTextColor(10);
             if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos || (((iy != -1) && (ix == -1)) && (((charge - objDistanse[iy][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[iy][curPos] > 0) && weather == 0))))  setTextColor(15); continue; }
 
@@ -707,9 +737,9 @@ void A3b(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInd
             if (iy == ix) { if (iy == curPos && ix == curPos)  setTextColor(11); cout << setw(4) << "X "; if (iy == curPos && ix == curPos)  setTextColor(15); continue; }
             if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos)  setTextColor(15); continue; }
             if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos)  setTextColor(15); continue; }
-            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(13);
+            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 80) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 80) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(13);
             cout << setw(4) << (int)objDistanse[ix][iy];
-            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(15);
+            if ((canCharge(ix, objIndex) || canCharge(iy, objIndex)) && bonusP - (int)(((objDistanse[curPos][iy] / 80) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && bonusP - (int)(((objDistanse[curPos][ix] / 80) * chargePrice) + evacuatorMinPrice - chargePrice) >= 0 && (iy == curPos || ix == curPos))  setTextColor(15);
         }
         gotoxyTop(1, 1 + (2 * (iy + 2)));
     }
@@ -772,7 +802,7 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
 
         if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D' && finder[3] == ':' && finder[4] == '"' && finder[5] == objIndex[curPos][0] && finder[6] == objIndex[curPos][1] && finder[7] == '"') idFinded = true;
 
-        
+
 
         if (idFinded)
         {
@@ -782,15 +812,15 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
             else if (finder[0] == (char)((int)questionNum[curPos] + (int)'0') && finder[1] == '_' && finder[2] == 'J' && finder[3] == 'A' && finder[4] == 'U' && finder[5] == 'T' && finder[6] == ':' && finder[7] == '"') { reading[0] = true; gotoxyBot(1, *inputY); }
 
 
-            if ( reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0; } }
+            if (reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0; } }
             else if (doQuestionsScan && finder[0] == 'P' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[1] = true;
 
 
-            if ( reading[2]) { charAnswers[1][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[2] = false; counter = 0; } }
+            if (reading[2]) { charAnswers[1][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[2] = false; counter = 0; } }
             else if (doQuestionsScan && finder[0] == '2' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[2] = true;;
 
 
-            if ( reading[3]) { charAnswers[2][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[3] = false; counter = 0; } }
+            if (reading[3]) { charAnswers[2][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[3] = false; counter = 0; } }
             else if (doQuestionsScan && finder[0] == '3' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[3] = true;
 
             if (doQuestionsScan && finder[0] != (char)((int)questionNum[curPos] + (int)'0') && finder[1] == '_' && finder[2] == 'J' && finder[3] == 'A' && finder[4] == 'U' && finder[5] == 'T' && finder[6] == ':' && finder[7] == '"') { fclose(file); }
@@ -818,7 +848,7 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
 
     while (1) {
-        
+
         gotoxyBot(1, *inputY);
         cin >> answer;
         if ((answer[0] == 'a' && answers[0] == 0) || (answer[0] == 'b' && answers[1] == 0) || (answer[0] == 'c' && answers[2] == 0))
@@ -926,8 +956,8 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
         if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
         {
             if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
-            else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
-            else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice), Xx)) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
+            else if (objDistanse[*curPos][id] < 80) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
+            else if ((int)(((objDistanse[*curPos][id] / 80) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 80) * chargePrice) + evacuatorMinPrice - chargePrice), Xx)) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 80) * chargePrice) + evacuatorMinPrice - chargePrice); }
         }
         clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); continue;
     }
