@@ -233,8 +233,8 @@ bool namePrice(int price, int Xx)
 {
     char answer[8];
     clearBotY(1, Xx);
-    gotoxyBot(1, 1); cout << "Эвакуация на эту точку будет стоить Evakuācija cita punktā maksās" << price << "BP.";
-    gotoxyBot(1, 2); cout << "Вас устраивает эта цена? Vai jūs esat apmierināti ar cenu?(Y / N)";
+    gotoxyBot(1, 1); cout << "Evakuācija cita punktā maksās" << price << "BP.";
+    gotoxyBot(1, 2); cout << "Vai jūs esat apmierināti ar cenu?(Y / N)";
     while (1) {
         gotoxyBot(1, 4);
         cin >> answer;
