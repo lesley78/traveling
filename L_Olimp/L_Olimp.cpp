@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <stdio.h>              
 #include <windows.h>            
 #include <conio.h>              
@@ -480,10 +480,9 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
     setFontSize(0, 18);
     SetWindow(x, y);
 
-    if (win) coutMiddled(x / 2, 3, "Jыs uzvarejвt! :)");
-    else
+    if (win)
     {
-        coutMiddled(x / 2, 3, "Jыs zaudejвt! :(");
+        coutMiddled(x / 2, 3, "Jыs uzvarejвt! :)");
         Beep(130, 100);
         Beep(262, 100);
         Beep(330, 100);
@@ -511,6 +510,10 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
         Beep(933, 100);
         Beep(933, 100);
         Beep(1047, 400);
+    }
+    else
+    {
+        coutMiddled(x / 2, 3, "Jыs zaudejвt! :(");
     }
 
     coutxy(2, 6, "Liels paldies jums, ka spзlзjвt mыsu spзli! ");
