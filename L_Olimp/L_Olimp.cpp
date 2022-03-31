@@ -233,8 +233,8 @@ bool namePrice(int price, int Xx)
 {
     char answer[8];
     clearBotY(1, Xx);
-    gotoxyBot(1, 1); cout << "Эвакуация на эту точку будет стоить " << price << "BP.";
-    gotoxyBot(1, 2); cout << "Вас устраивает эта цена? (Y / N)";
+    gotoxyBot(1, 1); cout << "Эвакуация на эту точку будет стоить Evakuācija cita punktā maksās" << price << "BP.";
+    gotoxyBot(1, 2); cout << "Вас устраивает эта цена? Vai jūs esat apmierināti ar cenu?(Y / N)";
     while (1) {
         gotoxyBot(1, 4);
         cin >> answer;
@@ -583,7 +583,7 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     int x = ((objCount + 1) * 4) + 3 + 1;
     int y = 2 + 2 + 5;
     gotoxyTop(x, y);
-    coutLV8("99 - uzlвdзрanas stacija");
+    coutLV8("99 - uzpildes stacija");
     for (int i = 0, counter = 0; i < objCount; i++)
     {
         gotoxyTop(x, 2 + y + (counter * 2));
@@ -699,7 +699,7 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
             *curPos = id;
             return objDistanse[bufferCurPos][id];
         }
-        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2 ,"Nepielaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2 ,"Nepieļaujamie dati"); }
     }
 }
 
@@ -711,27 +711,27 @@ void write(const int type, int* inputY)
     {
     case 1:
         gotoxyBot(1, 1);
-        cout << "Выберите индекс следующего места назначения.";
+        cout << "Выберите индекс следующего места назначения. Izvēlities nākamās vietas indeksu.";
         *inputY = 3;
         break;
     case 2:
         gotoxyBot(1, 1);
-        cout << "Хотите зарядить свой автомобиль? (Y / N) (" << chargePrice << "BP)";
+        cout << "Хотите зарядить свой автомобиль? Vai gribat uzlādēt mašīnas akumulatoru? (Y / N) (" << chargePrice << "BP)";
         *inputY = 3;
         break;
     case 3:
         gotoxyBot(1, 1);
-        cout << "Вопрос.Вопрос!Вопрос?Вопрос?! (3)"; //для викторины
+        cout << "Вопрос.Вопрос!Вопрос?Вопрос?! (3)"; //для викторины????? Что тут
         *inputY = 3;
         break;
     case 4:
-        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на зарядку.";
-        gotoxyBot(1, 2); cout << "Нажмите Enter что-бы зарядится.";
+        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на зарядку. Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai uzlādētos.";
+        gotoxyBot(1, 2); cout << "Нажмите Enter что-бы зарядится. Nospiediet Enter ,lai uzlādētos.";
         *inputY = 4;
         break;
     case 5:
-        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора.";
-        gotoxyBot(1, 2); cout << "Введите индекс зарядной станции куда вы хотите отправится.";
+        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора. Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai izsauktu evakuatoru.";
+        gotoxyBot(1, 2); cout << "Введите индекс зарядной станции куда вы хотите отправится. Ievadiet uzlādēšanas stacijas indeksu.";
         *inputY = 4;
         break;
     }
@@ -752,7 +752,7 @@ void tryCharge(int inputY, int* bonusP, float* charge, int Xx)
             return;
         }
         else if (answer[0] == 'N') return;
-        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); }
     }
 }
 
@@ -768,7 +768,7 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
         gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
-        if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue; }
         if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
         if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
         {
@@ -776,6 +776,6 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
             else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
             else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice), Xx)) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
         }
-        clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue;
+        clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue;
     }
 }
