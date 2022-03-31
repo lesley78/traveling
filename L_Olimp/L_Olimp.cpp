@@ -480,18 +480,18 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
     setFontSize(0, 18);
     SetWindow(x, y);
 
-    if (win) coutMiddled(x / 2, 3, "Вы Победили! :)");
-    else coutMiddled(x / 2, 3, "Вы Проиграли! :(");
+    if (win) coutMiddled(x / 2, 3, "Jūs uzvarejāt! :)");
+    else coutMiddled(x / 2, 3, "Jūs zaudejāt! :(");
 
-    coutxy(2, 6,  "Большое вам спасибо за то что играли в нашу игру!");
-    coutxy(2, 8,  "Статистика:");
-    coutxy(2, 9,  "Осталось бонусных пунктов:................."); cout << bonusP << "BP";
-    coutxy(2, 10, "Заработано бонусных пунктов за всю игру:..."); 
-    coutxy(2, 11, "Осталось заряда:..........................."); cout << 100. * charge/maxCharge << "% (" << charge << "km)";
-    coutxy(2, 12, "Потрачено заряда за всю игру:..............");
-    coutxy(2, 13, "Время проведённое в игре:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
+    coutxy(2, 6,  "Liels paldies jums, ka spēlējāt mūsu spēli! ");
+    coutxy(2, 8,  "Statistika:");
+    coutxy(2, 9,  "Palika bonuspunktu:................."); cout << bonusP << "BP";
+    coutxy(2, 10, "Tik bonuspunktu jūs ieguvat:..."); 
+    coutxy(2, 11, "Palika lādiņa:..........................."); cout << 100. * charge/maxCharge << "% (" << charge << "km)";
+    coutxy(2, 12, "Tik lādiņa jūs paterejāt spēlēs laikā:..............");
+    coutxy(2, 13, "Laiks pavadīts spēlē:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
     char name[32];
-    coutxy(2, 15, "Пожалуйста введите своё имя (до 16-ти символов) - "); cin >> name;
+    coutxy(2, 15, "Ievadiet savu vārdu (līdz 16 simboliem) - "); cin >> name;
 
     
     char wNames[10][16];
@@ -539,15 +539,15 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
     }
     
 
-    coutxy(2, 17, "Нажмите Enter что-бы увидеть топ 10 игр"); getch();
+    coutxy(2, 17, "Nospiediet Enter ,lai redzētu labāko 10 spēļu topu"); getch();
 
     clear();
     for (int i = 0; i < 10; i++)
     {
-        gotoxy(2, 2 + i); cout << i + 1 << " место"; gotoxy(12 + 3, 2 + i); cout << wNames[i]; gotoxy(12 + 18 + 3, 2 + i); cout << Stats[i][0]; cout << "\t"; cout << Stats[i][1]; cout << "min\t"; cout << Stats[i][2]; cout << "sek";
+        gotoxy(2, 2 + i); cout << i + 1 << " vieta"; gotoxy(12 + 3, 2 + i); cout << wNames[i]; gotoxy(12 + 18 + 3, 2 + i); cout << Stats[i][0]; cout << "\t"; cout << Stats[i][1]; cout << "min\t"; cout << Stats[i][2]; cout << "sek";
     }
 
-    coutxy(2, 14, "Нажмите Enter"); getch();
+    coutxy(2, 14, "Nospiediet Enter"); getch();
 }
 
 void A1()
