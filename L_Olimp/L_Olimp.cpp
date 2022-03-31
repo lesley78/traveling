@@ -276,15 +276,15 @@ void updInfo(float charge, int points, int X, int weather)
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
     cout << "                                      ";
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Charge: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "km rain time)";
+    cout << "Lādiņš: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "km negaisa laikā )";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
-    cout << "Bonus Points: " << setw(length(points)) << points << "     ";
+    cout << "Bonuspunkti: " << setw(length(points)) << points << "     ";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 7);
-    cout << "Weather: ";
-    if (weather == 1) cout << setw(5) << "clear";
-    else cout << setw(5) << "rain";
+    cout << "Laikapstākļi: ";
+    if (weather == 1) cout << setw(5) << "skaidrs laiks";
+    else cout << setw(5) << "lietus";
 
 }
 
@@ -674,8 +674,8 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
             return points;
         }
         else if (points > 0) points = points - 5;
-        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Неправильно, попробуте ещё раз"); }
-        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepielaujamie dati"); }
+        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepareizi, pamēģiniet velreiz!"); }
+        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepieļaujamie dati"); }
     }
 
     setlocale(LC_ALL, "C");
@@ -705,18 +705,18 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
 
 void write(const int type, int* inputY)
 {
-    setlocale(LC_ALL, "Russian");
-    SetConsoleCP(1251); SetConsoleOutputCP(1251);
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
     switch (type)
     {
     case 1:
         gotoxyBot(1, 1);
-        cout << "Выберите индекс следующего места назначения. Izvēlities nākamās vietas indeksu.";
+        cout << "Izvēlaties nākamās vietas indeksu.";
         *inputY = 3;
         break;
     case 2:
         gotoxyBot(1, 1);
-        cout << "Хотите зарядить свой автомобиль? Vai gribat uzlādēt mašīnas akumulatoru? (Y / N) (" << chargePrice << "BP)";
+        cout << "Vai gribat uzlādēt mašīnas akumulatoru? (Y / N) (" << chargePrice << "BP)";
         *inputY = 3;
         break;
     case 3:
@@ -725,13 +725,13 @@ void write(const int type, int* inputY)
         *inputY = 3;
         break;
     case 4:
-        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на зарядку. Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai uzlādētos.";
-        gotoxyBot(1, 2); cout << "Нажмите Enter что-бы зарядится. Nospiediet Enter ,lai uzlādētos.";
+        gotoxyBot(1, 1); cout << "Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai uzlādētos.";
+        gotoxyBot(1, 2); cout << "Nospiediet Enter ,lai uzlādētos.";
         *inputY = 4;
         break;
     case 5:
-        gotoxyBot(1, 1); cout << "у вас закончился заряд автомобиля, но есть деньги на вызов эвакуатора. Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai izsauktu evakuatoru.";
-        gotoxyBot(1, 2); cout << "Введите индекс зарядной станции куда вы хотите отправится. Ievadiet uzlādēšanas stacijas indeksu.";
+        gotoxyBot(1, 1); cout << "Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai izsauktu evakuatoru.";
+        gotoxyBot(1, 2); cout << "Ievadiet uzlādēšanas stacijas indeksu.";
         *inputY = 4;
         break;
     }
@@ -769,7 +769,7 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
         cin >> answer;
         id = findIndexId(answer, objIndex);
         if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue; }
-        if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepielaujamie dati"); continue; }
+        if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue; }
         if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
         {
             if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
