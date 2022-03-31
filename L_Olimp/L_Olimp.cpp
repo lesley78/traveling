@@ -243,7 +243,7 @@ bool namePrice(int price, int Xx)
             return true;
         }
         else if (answer[0] == 'N') return false;
-        else { clearBotY(4, Xx); coutxyBot(1, 4 + 2, "Nepielaujamie dati"); }
+        else { clearBotY(4, Xx); coutxyBot(1, 4 + 2, "Nepieļaujamie dati"); }
     }
 }
 
@@ -276,7 +276,7 @@ void updInfo(float charge, int points, int X, int weather)
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
     cout << "                                      ";
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Lādiņš: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "km negaisa laikā )";
+    cout << "Lādiņš: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "negaisā)";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
     cout << "Bonuspunkti: " << setw(length(points)) << points << "     ";
