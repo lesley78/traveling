@@ -13,8 +13,8 @@
 using namespace std;
 
 const int objMaxNameLength = 48;    // максимальная длинна имени объекта
-const int objMaxIndexLength = 5;    // максимальная длинна индекса объекта
-const int objCount = 22;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
+const int objMaxIndexLength = 3;    // максимальная длинна индекса объекта
+const int objCount = 21;        // количество ID в файле (потом переделать на автоподщёт или другой способ получения данных) 
 const int maxCharge = 140;      // максимальный заряд машины (в км)
 const int maxChargeRain = 80;
 const int chargePrice = 10;
@@ -30,6 +30,15 @@ const unsigned int Y = 2 + ((objCount * 2) - 1) + 3 + objCount + 2;     // ра�
 
     // Функции //
 
+int random(int from, int to) {
+    return (rand() % (to + 1 - from)) + from;
+}
+
+int orRand(int num1, int num2) {
+    if (random(0, 1)) return num1;
+    else return num2;
+}
+
 // очистить консоль С координаты (y) ДО конца в нижней части игрового экрана
 void clearBotY(int y, int X)
 {
@@ -40,7 +49,7 @@ void clearBotY(int y, int X)
             coutxy(3 + j, y + i + 4 + ((objCount * 2) - 1) + 3, " ");
         }
     }
-}       
+}
 
 // вычеслить степень (неиспользуется)
 int powInt(int N1, int N2) // ??? ?????????? ????????
@@ -141,6 +150,14 @@ void fillDistanse(float objDistanse[][objCount], float objLongitude[], float obj
     }
 }
 
+void fillQuestionsNumbers(int questionNum[])
+{
+    for (int i = 0; i < objCount; i++)
+    {
+        questionNum[i] = random(1, 3);
+    }
+}
+
 // устанавливает цвет текста (int)
 void setTextColor(int Color)
 {
@@ -162,7 +179,7 @@ void gotoxyBot(int x, int y)
 // узнаёт id объекта ипользуя его индекс
 int findIndexId(char Index[], char objIndex[][objMaxIndexLength])
 {
-    for (int i = 0; i < objCount; i++) 
+    for (int i = 0; i < objCount; i++)
     {
         if (Index[0] == objIndex[i][0] && Index[1] == objIndex[i][1]) return i;
     }
@@ -180,7 +197,6 @@ int length(int num)
     return counter;
 }
 
-//
 void setFontSize(int x, int y)
 {
     CONSOLE_FONT_INFOEX cfi;
@@ -202,7 +218,7 @@ bool canCharge(int curPos, char objIndex[][objMaxIndexLength])
 
 bool canDrive(float objDistanse[][objCount], int curPos, int charge)
 {
-    for (int i = 1;true;i++)
+    for (int i = 1; true; i++)
     {
         if (curPos + i < objCount && objDistanse[curPos][curPos + i] <= charge) return true;
         if (curPos - i >= 0 && objDistanse[curPos][curPos - i] <= charge) return true;
@@ -213,28 +229,22 @@ bool canDrive(float objDistanse[][objCount], int curPos, int charge)
 int nearestChargeStationId(char objIndex[][objMaxIndexLength], float objDistanse[][objCount], int curPos)
 {
     float distance = -1;
-    for (int i = 0; i < objCount ; i++)
+    for (int i = 0; i < objCount; i++)
     {
         if (canCharge(i, objIndex) && (distance == -1 || distance > objDistanse[curPos][i])) distance = objDistanse[curPos][i];
     }
     return distance;
 }
 
-int random(int from, int to) {
-    return (rand() % (to + 1 - from)) + from;
-}
-
-int orRand(int num1, int num2) {
-    if (random(0, 1)) return num1;
-    else return num2;
-}
-
 bool namePrice(int price, int Xx)
 {
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
     char answer[8];
     clearBotY(1, Xx);
-    gotoxyBot(1, 1); cout << "Evakuācija cita punktā maksās" << price << "BP.";
-    gotoxyBot(1, 2); cout << "Vai jūs esat apmierināti ar cenu?(Y / N)";
+    gotoxyBot(1, 1); cout << "Evakuвcija cita punktв maksвs " << price << "BP.";
+    gotoxyBot(1, 2); cout << "Vai jыs esat apmierinвti ar cenu?(Y / N)";
     while (1) {
         gotoxyBot(1, 4);
         cin >> answer;
@@ -243,8 +253,11 @@ bool namePrice(int price, int Xx)
             return true;
         }
         else if (answer[0] == 'N') return false;
-        else { clearBotY(4, Xx); coutxyBot(1, 4 + 2, "Nepieļaujamie dati"); }
+        else { clearBotY(4, Xx); coutxyBot(1, 4 + 2, "Nepielaujamie dati"); }
     }
+
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
 int maxLengthInCharArray(char objNames[][objMaxNameLength])
@@ -260,10 +273,12 @@ int maxLengthInCharArray(char objNames[][objMaxNameLength])
     return outMax;
 }
 
-// обновляет показатели заряда и количество пунктов на экране
+// ????????? ?????????? ?????? ? ?????????? ??????? ?? ??????
 void updInfo(float charge, int points, int X, int weather)
 {
-    
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 1);
     cout << "[";
     for (int i = 0; i < X - (((objCount + 1) * 4) + 3 + 1) - 5; i++)
@@ -276,31 +291,47 @@ void updInfo(float charge, int points, int X, int weather)
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
     cout << "                                      ";
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 3);
-    cout << "Lādiņš: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "negaisā)";
+    cout << "Lвdiтр: " << 100 * (int)charge / (int)maxCharge << "% (" << (int)charge << "km) " << "(" << (int)(charge / maxCharge * maxChargeRain) << "km negaisв)";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 5);
     cout << "Bonuspunkti: " << setw(length(points)) << points << "     ";
 
     gotoxyTop(((objCount + 1) * 4) + 3 + 1, 7);
-    cout << "Laikapstākļi: ";
+    cout << "Laikapstвkпi: ";
     if (weather == 1) cout << setw(5) << "skaidrs laiks";
-    else cout << setw(5) << "lietus";
+    else cout << setw(5) << "lietus       ";
 
+    setlocale(LC_ALL, "C");
+    SetConsoleCP(866); SetConsoleOutputCP(866);
+}
+
+void coutMiddled(int x, int y, const char str[])
+{
+    int leng = 0;
+    int i = 0;
+    while (true) {
+        if (str[i] != (char)0) leng = leng + 1;
+        else break;
+        i = i + 1;
+    }
+    gotoxy(x - (leng / 2), y);
+    cout << str;
 }
 
 
-// прототипы Основных Функций
+// ????????? ???????? ???????
 
 void A1();
 void A2(int[], float[], float[], char[][objMaxNameLength], char[][objMaxIndexLength]);
-void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float,int);
+void A3(int[], float[][objCount], char[][objMaxIndexLength], int, float, int);
 void A3b(int[], float[][objCount], char[][objMaxIndexLength], int, int);
 void displayNames(char[][objMaxNameLength], char[][objMaxIndexLength]);
-int question(int, char[][objMaxIndexLength], int*, int[], int);
-float distance(int*, float, char[][objMaxIndexLength], float[][objCount],int, int);
+int question(int, char[][objMaxIndexLength], int*, int[], int, int[objCount]);
+float distance(int*, float, char[][objMaxIndexLength], float[][objCount], int, int);
 void write(const int, int*);
 void tryCharge(int, int*, float*, int);
 int evacuator(int*, int, char[][objMaxIndexLength], float[][objCount], int, int);
+void endGame(bool, int, int, int, int, int);
 
 int main()
 {
@@ -313,6 +344,7 @@ int main()
     int weather = rand() % 2;
     int old_weather = 0;
     int counter = 0;
+    int questionNum[objCount];
     float objLongitude[objCount + 1] = { 0 };
     float objLatitude[objCount + 1] = { 0 };
     float objDistanse[objCount][objCount] = { 0. };
@@ -321,20 +353,24 @@ int main()
     char objNames[objCount][objMaxNameLength] = { (char)0 };
     char objIndex[objCount][objMaxIndexLength] = { (char)0 };
     bool doCharge = false;
+    int startTime = time(NULL);
 
 
     srand(time(NULL));
     setTextColor(15);
     setFontSize(0, 12);
 
+    fillQuestionsNumbers(questionNum);
     A2(objType, objLongitude, objLatitude, objNames, objIndex);
     const int Xx = X + maxLengthInCharArray(objNames);
+
     A1();
     SetWindow(Xx, Y);
     makeFrame(Xx);
     fillDistanse(objDistanse, objLongitude, objLatitude, objType);
     A3(objType, objDistanse, objIndex, curPos, charge, weather);
     displayNames(objNames, objIndex);
+
 
     updInfo(charge, bonusP, Xx, weather);
 
@@ -344,8 +380,21 @@ int main()
     clearBotY(1, Xx);
     updInfo(charge, bonusP, Xx, weather);
 
-    while (1) 
+    while (1)
     {
+        if (curPos == objCount - 1) endGame(1, bonusP, bonusP, charge, charge, startTime);
+
+        answers[0] = -1; answers[1] = -1; answers[2] = -1;
+        while (true) {
+            if (answers[0] == -1) answers[0] = random(0, 2);
+            if (answers[1] == -1 || answers[1] == answers[0] || answers[1] == answers[2]) answers[1] = random(0, 2);
+            if (answers[2] == -1 || answers[2] == answers[0] || answers[2] == answers[1]) answers[2] = random(0, 2);
+            if (answers[0] != -1 && answers[1] != -1 && answers[2] != -1 && answers[0] != answers[1] && answers[1] != answers[2] && answers[2] != answers[0]) break;
+        }
+        bonusP = bonusP + question(curPos, objIndex, &inputY, answers, Xx, questionNum);
+        clearBotY(1, Xx);
+        updInfo(charge, bonusP, Xx, weather);
+
         old_weather = weather;
 
         if (random(1, 100) < chance) weather = 1;
@@ -357,16 +406,6 @@ int main()
         if (weather == 1) chance = chance - 15. * (counter / (1. + (abs(50 - chance) / 25.)));
         else chance = chance + 30. * (counter / (1. + (abs(50 - chance) / 25.)));
 
-
-        answers[0] = -1; answers[1] = -1; answers[2] = -1;
-        while (true) {
-            if (answers[0] == -1) answers[0] = random(0, 2);
-            if (answers[1] == -1  || answers[1] == answers[0] || answers[1] == answers[2]) answers[1] = random(0, 2);
-            if (answers[2] == -1 || answers[2] == answers[0] || answers[2] == answers[1]) answers[2] = random(0, 2);
-            if (answers[0] != -1 && answers[1] != -1 && answers[2] != -1 && answers[0] != answers[1] && answers[1] != answers[2] && answers[2] != answers[0]) break;
-        }
-        bonusP = bonusP + question(curPos, objIndex, &inputY, answers, Xx);
-        clearBotY(1, Xx);
         updInfo(charge, bonusP, Xx, weather);
 
         if (canCharge(curPos, objIndex) && bonusP >= chargePrice)
@@ -378,6 +417,12 @@ int main()
                 clearBotY(1, Xx);
                 updInfo(charge, bonusP, Xx, weather);
                 A3(objType, objDistanse, objIndex, curPos, charge, weather);
+
+                write(1, &inputY);
+                charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
+                A3(objType, objDistanse, objIndex, curPos, charge, weather);
+                clearBotY(1, Xx);
+                updInfo(charge, bonusP, Xx, weather);
             }
             else
             {
@@ -389,6 +434,12 @@ int main()
                 clearBotY(1, Xx);
                 updInfo(charge, bonusP, Xx, weather);
                 A3(objType, objDistanse, objIndex, curPos, charge, weather);
+
+                write(1, &inputY);
+                charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
+                A3(objType, objDistanse, objIndex, curPos, charge, weather);
+                clearBotY(1, Xx);
+                updInfo(charge, bonusP, Xx, weather);
             }
         }
         else if (!canDrive(objDistanse, curPos, charge) && bonusP >= evacuatorMinPrice)
@@ -399,21 +450,105 @@ int main()
             clearBotY(1, Xx);
             updInfo(charge, bonusP, Xx, weather);
             A3(objType, objDistanse, objIndex, curPos, charge, weather);
-            
+
+        }
+        else if (!canDrive(objDistanse, curPos, charge)) endGame(0, bonusP, bonusP, charge, charge, startTime);
+        else
+        {
+            write(1, &inputY);
+            charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
+            A3(objType, objDistanse, objIndex, curPos, charge, weather);
+            clearBotY(1, Xx);
+            updInfo(charge, bonusP, Xx, weather);
         }
 
-        write(1, &inputY);
-        charge = charge - distance(&curPos, charge, objIndex, objDistanse, inputY, Xx);
-        A3(objType, objDistanse, objIndex, curPos, charge, weather);
-        clearBotY(1, Xx);
-        updInfo(charge, bonusP, Xx, weather);
 
-        if (cin.get() == 'S') break;
     }
 
 }
 
-// Основные Функции //
+// ???????? ??????? //
+void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int startTime)
+{
+    int y = 30;
+    int x = 3*y;
+    int newTime = time(NULL);
+    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251); SetConsoleOutputCP(1251);
+
+    clear();
+    setFontSize(0, 18);
+    SetWindow(x, y);
+
+    if (win) coutMiddled(x / 2, 3, "Вы Победили! :)");
+    else coutMiddled(x / 2, 3, "Вы Проиграли! :(");
+
+    coutxy(2, 6,  "Большое вам спасибо за то что играли в нашу игру!");
+    coutxy(2, 8,  "Статистика:");
+    coutxy(2, 9,  "Осталось бонусных пунктов:................."); cout << bonusP << "BP";
+    coutxy(2, 10, "Заработано бонусных пунктов за всю игру:..."); 
+    coutxy(2, 11, "Осталось заряда:..........................."); cout << 100. * charge/maxCharge << "% (" << charge << "km)";
+    coutxy(2, 12, "Потрачено заряда за всю игру:..............");
+    coutxy(2, 13, "Время проведённое в игре:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
+    char name[32];
+    coutxy(2, 15, "Пожалуйста введите своё имя (до 16-ти символов) - "); cin >> name;
+
+    
+    char wNames[10][16];
+    int Stats[10][3];
+
+    FILE* file;
+    fopen_s(&file, "Program_Info/TOP.txt", "rt");
+    if (!file) return;
+    fscanf_s(file, "1( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n2( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n3( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n4( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n5( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n6( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n7( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n8( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n9( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)\n10( NAME:\x22%[^\x22]\x22 BP:\x22%i\x22 TIMEM:\x22%i\x22 TIMES:\x22%i\x22)", &wNames[0], 16, &Stats[0][0], &Stats[0][1], &Stats[0][2], &wNames[1], 16, &Stats[1][0], &Stats[1][1], &Stats[1][2], &wNames[2], 16, &Stats[2][0], &Stats[2][1], &Stats[2][2], &wNames[3], 16, &Stats[3][0], &Stats[3][1], &Stats[3][2], &wNames[4], 16, &Stats[4][0], &Stats[4][1], &Stats[4][2], &wNames[5], 16, &Stats[5][0], &Stats[5][1], &Stats[5][2], &wNames[6], 16, &Stats[6][0], &Stats[6][1], &Stats[6][2], &wNames[7], 16, &Stats[7][0], &Stats[7][1], &Stats[7][2], &wNames[8], 16, &Stats[8][0], &Stats[8][1], &Stats[8][2], &wNames[9], 16, &Stats[9][0], &Stats[9][1], &Stats[9][2]);
+    fclose(file);
+    
+    if (win) 
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (bonusP > Stats[i][0])
+            {
+
+                for (int j = 9; j > i; j--)
+                {
+                    for (int g = 0; g < 16; g++) wNames[j][g] = wNames[j - 1][g];
+                    Stats[j][0] = Stats[j - 1][0];
+                    Stats[j][1] = Stats[j - 1][1];
+                    Stats[j][2] = Stats[j - 1][2];
+                }
+                for (int g = 0; g < 16; g++) wNames[i][g] = name[g];
+                Stats[i][0] = bonusP;
+                Stats[i][1] = (newTime - startTime) / 60;
+                Stats[i][2] = (newTime - startTime) % 60;
+
+                break;
+            }
+        }
+
+        fopen_s(&file, "Program_Info/TOP.txt", "w");
+        if (!file) return;
+
+        for (int i = 0; i < 10; i++)
+        {
+            fprintf(file, "%i(NAME:\x0022%s\x0022 BP:\x0022%i\x0022 TIMEM:\x0022%i\x0022 TIMES:\x0022%i\x0022)\n", i + 1, wNames[i], Stats[i][0], Stats[i][1], Stats[i][2]);
+        }
+
+
+        fclose(file);
+    }
+    
+
+    coutxy(2, 17, "Нажмите Enter что-бы увидеть топ 10 игр"); getch();
+
+    clear();
+    for (int i = 0; i < 10; i++)
+    {
+        gotoxy(2, 2 + i); cout << i + 1 << " место"; gotoxy(12 + 3, 2 + i); cout << wNames[i]; gotoxy(12 + 18 + 3, 2 + i); cout << Stats[i][0]; cout << "\t"; cout << Stats[i][1]; cout << "min\t"; cout << Stats[i][2]; cout << "sek";
+    }
+
+    coutxy(2, 14, "Нажмите Enter"); getch();
+}
 
 void A1()
 {
@@ -480,11 +615,12 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
                 objLongitude[id] = objLongitude[id] + ((float)finder[5] - (float)'0') / powInt(10, counter);
                 counter = counter + 1;
             }
-            if (finder[6] == '\x22') { reading[2] = false; counter = 0; isFract = false;}}
+            if (finder[6] == '\x22') { reading[2] = false; counter = 0; isFract = false; }
+        }
         else if (finder[0] == 'L' && finder[1] == 'O' && finder[2] == 'N' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"')reading[2] = true;
 
-        if (reading[3]) { 
-            if (finder[5] == ',' || finder[5] == '.') { isFract = true; counter = 1; continue;}
+        if (reading[3]) {
+            if (finder[5] == ',' || finder[5] == '.') { isFract = true; counter = 1; continue; }
             if (!isFract) {
                 objLatitude[id] = objLatitude[id] * powInt(10, counter) + (float)finder[5] - (float)'0';
                 counter = counter + 1;
@@ -493,14 +629,15 @@ void A2(int objType[], float objLongitude[], float objLatitude[], char objNames[
                 objLatitude[id] = objLatitude[id] + ((float)finder[5] - (float)'0') / powInt(10, counter);
                 counter = counter + 1;
             }
-            if (finder[6] == '\x22') { reading[3] = false; counter = 0; isFract = false;}}
+            if (finder[6] == '\x22') { reading[3] = false; counter = 0; isFract = false; }
+        }
         else if (finder[0] == 'L' && finder[1] == 'A' && finder[2] == 'T' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"')reading[3] = true;
 
-        if (reading[4]) { objNames[id][counter] = finder[5]; counter = counter + 1; if (finder[6] == '\x22') { reading[4] = false; counter = 0; }}
+        if (reading[4]) { objNames[id][counter] = finder[5]; counter = counter + 1; if (finder[6] == '\x22') { reading[4] = false; counter = 0; } }
         else if (finder[0] == 'N' && finder[1] == 'A' && finder[2] == 'M' && finder[3] == 'E' && finder[4] == ':' && finder[5] == '"')reading[4] = true;
 
-        if (reading[5]) { objIndex[id][counter] = finder[4]; counter = counter + 1; if (finder[5] == '\x22') { reading[5] = false; counter = 0; }}
-        else if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D'  && finder[3] == ':' && finder[4] == '"')reading[5] = true;
+        if (reading[5]) { objIndex[id][counter] = finder[4]; counter = counter + 1; if (finder[5] == '\x22') { reading[5] = false; counter = 0; } }
+        else if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D' && finder[3] == ':' && finder[4] == '"')reading[5] = true;
 
         //cout << id << "\t" << objIndex[id] << "\t" << finder << endl; Sleep(10);
 
@@ -535,8 +672,13 @@ void A3(int objType[], float objDistanse[][objCount], char objIndex[][objMaxInde
             if (ix == -1) { printf("%s  ", objIndex[iy]); continue; }
             printf("%.0f ", objDistanse[ix][iy]); continue;*/
             if (iy == ix) { if (iy == curPos && ix == curPos)  setTextColor(11); cout << setw(4) << "X "; if (iy == curPos && ix == curPos)  setTextColor(15); continue; }
-            if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos)  setTextColor(15); continue; }
-            if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos)  setTextColor(15); continue; }
+
+            if (((ix != -1) && (iy == -1)) && (((charge - objDistanse[ix][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0) && weather == 0)))  setTextColor(10);
+            if (iy == -1) { if (ix == curPos)  setTextColor(11); cout << setw(4) << objIndex[ix]; if (ix == curPos || (((ix != -1) && (iy == -1)) && (((charge - objDistanse[ix][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0) && weather == 0))))  setTextColor(15); continue; }
+            
+            if (((iy != -1) && (ix == -1)) && (((charge - objDistanse[iy][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[iy][curPos] > 0) && weather == 0)))  setTextColor(10);
+            if (ix == -1) { if (iy == curPos)  setTextColor(11); cout << setw(4) << objIndex[iy]; if (iy == curPos || (((iy != -1) && (ix == -1)) && (((charge - objDistanse[iy][curPos] > 0) && weather == 1) || (((charge / maxCharge * maxChargeRain) - objDistanse[iy][curPos] > 0) && weather == 0))))  setTextColor(15); continue; }
+
             if ((charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 1) || ((charge / maxCharge * maxChargeRain) - objDistanse[curPos][iy] > 0 && (charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 0))  setTextColor(10);
             cout << setw(4) << (int)objDistanse[ix][iy];
             if ((charge - objDistanse[curPos][iy] > 0 && charge - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 1) || ((charge / maxCharge * maxChargeRain) - objDistanse[curPos][iy] > 0 && (charge / maxCharge * maxChargeRain) - objDistanse[ix][curPos] > 0 && (iy == curPos || ix == curPos) && weather == 0))  setTextColor(15);
@@ -597,8 +739,9 @@ void displayNames(char objNames[][objMaxNameLength], char objIndex[][objMaxIndex
     SetConsoleCP(866); SetConsoleOutputCP(866);
 }
 
-int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int answers[], int Xx)
+int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int answers[], int Xx, int questionNum[objCount])
 {
+    if (questionNum[curPos] == -1) return 0;
 
     setlocale(LC_ALL, "lv_LV.UTF-8");
     SetConsoleCP(1257); SetConsoleOutputCP(1257);
@@ -611,6 +754,7 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
     bool idFinded = false;
     char charAnswers[3][64] = { 0 };
     int counter = 0;
+    bool doQuestionsScan = false;
 
     FILE* file;
     fopen_s(&file, "Open_Info/questions.txt", "rt");
@@ -627,27 +771,31 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
 
 
         if (finder[0] == 'I' && finder[1] == 'N' && finder[2] == 'D' && finder[3] == ':' && finder[4] == '"' && finder[5] == objIndex[curPos][0] && finder[6] == objIndex[curPos][1] && finder[7] == '"') idFinded = true;
-     
+
+        
+
         if (idFinded)
         {
-            if (reading[0]) { cout << finder[5]; if (finder[5] == ' ' && counter >= Xx - 4 - 10) { gotoxyBot(1, *inputY + 1); counter = 0; *inputY = *inputY + 1; } counter = counter + 1; if (finder[6] == '\x22') { reading[0] = false; counter = 0; *inputY = *inputY + 2; } }
-            else if (finder[0] == 'J' && finder[1] == 'A' && finder[2] == 'U' && finder[3] == 'T' && finder[4] == ':' && finder[5] == '"') { reading[0] = true; gotoxyBot(1, *inputY);}
+            //cout << idFinded << "\t" << finder << endl; Sleep(10);
+
+            if (reading[0]) { cout << finder[7]; if (finder[7] == ' ' && counter >= Xx - 4 - 10) { gotoxyBot(1, *inputY + 1); counter = 0; *inputY = *inputY + 1; } counter = counter + 1; if (finder[8] == '\x22') { reading[0] = false; counter = 0; *inputY = *inputY + 2; doQuestionsScan = true; } }
+            else if (finder[0] == (char)((int)questionNum[curPos] + (int)'0') && finder[1] == '_' && finder[2] == 'J' && finder[3] == 'A' && finder[4] == 'U' && finder[5] == 'T' && finder[6] == ':' && finder[7] == '"') { reading[0] = true; gotoxyBot(1, *inputY); }
 
 
-            if (reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0;} }
-            else if (finder[0] == 'P' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[1] = true;
+            if ( reading[1]) { charAnswers[0][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[1] = false; counter = 0; } }
+            else if (doQuestionsScan && finder[0] == 'P' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[1] = true;
 
 
-            if (reading[2]) { charAnswers[1][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[2] = false; counter = 0;} }
-            else if (finder[0] == '2' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[2] = true;;
+            if ( reading[2]) { charAnswers[1][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[2] = false; counter = 0; } }
+            else if (doQuestionsScan && finder[0] == '2' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[2] = true;;
 
 
-            if (reading[3]) { charAnswers[2][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[3] = false; counter = 0; fclose(file); } }
-            else if (finder[0] == '3' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[3] = true;
+            if ( reading[3]) { charAnswers[2][counter] = finder[6]; counter = counter + 1; if (finder[7] == '\x22') { reading[3] = false; counter = 0; } }
+            else if (doQuestionsScan && finder[0] == '3' && finder[1] == '_' && finder[2] == 'A' && finder[3] == 'T' && finder[4] == 'B' && finder[5] == ':' && finder[6] == '"')reading[3] = true;
 
+            if (doQuestionsScan && finder[0] != (char)((int)questionNum[curPos] + (int)'0') && finder[1] == '_' && finder[2] == 'J' && finder[3] == 'A' && finder[4] == 'U' && finder[5] == 'T' && finder[6] == ':' && finder[7] == '"') { fclose(file); }
         }
 
-        //cout << idFinded << "\t" << finder << endl; Sleep(10);
 
     }
     fclose(file);
@@ -655,7 +803,7 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
     gotoxyBot(1, *inputY);
     cout << "a: ";
     cout << charAnswers[answers[0]];
-    
+
     gotoxyBot(1, *inputY + 2);
     cout << "b: ";
     cout << charAnswers[answers[1]];
@@ -666,16 +814,21 @@ int question(int curPos, char objIndex[][objMaxIndexLength], int* inputY, int an
 
     *inputY = *inputY + 6;
 
+    setlocale(LC_ALL, "Latvian");
+    SetConsoleCP(1257); SetConsoleOutputCP(1257);
+
     while (1) {
+        
         gotoxyBot(1, *inputY);
         cin >> answer;
         if ((answer[0] == 'a' && answers[0] == 0) || (answer[0] == 'b' && answers[1] == 0) || (answer[0] == 'c' && answers[2] == 0))
         {
+            questionNum[curPos] = -1;
             return points;
         }
         else if (points > 0) points = points - 5;
-        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepareizi, pamēģiniet velreiz!"); }
-        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepieļaujamie dati"); }
+        if (answer[0] == 'a' || answer[0] == 'b' || answer[0] == 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepareizi, pamзмiniet velreiz!"); }
+        if (answer[0] != 'a' && answer[0] != 'b' && answer[0] != 'c') { clearBotY(*inputY, Xx); coutxyBot(1, *inputY + 2, "Nepieпaujamie dati"); }
     }
 
     setlocale(LC_ALL, "C");
@@ -688,7 +841,7 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
     char answer[8];
     int id;
     int bufferCurPos = *curPos;
-    
+
     while (1) {
         gotoxyBot(1, inputY);
         cin >> answer;
@@ -699,7 +852,7 @@ float distance(int* curPos, float charge, char objIndex[][objMaxIndexLength], fl
             *curPos = id;
             return objDistanse[bufferCurPos][id];
         }
-        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2 ,"Nepieļaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); }
     }
 }
 
@@ -711,27 +864,27 @@ void write(const int type, int* inputY)
     {
     case 1:
         gotoxyBot(1, 1);
-        cout << "Izvēlaties nākamās vietas indeksu.";
+        cout << "Izvзlaties nвkamвs vietas indeksu.";
         *inputY = 3;
         break;
     case 2:
         gotoxyBot(1, 1);
-        cout << "Vai gribat uzlādēt mašīnas akumulatoru? (Y / N) (" << chargePrice << "BP)";
+        cout << "Vai gribat uzlвdзt maроnas akumulatoru? (Y / N) (" << chargePrice << "BP)";
         *inputY = 3;
         break;
     case 3:
         gotoxyBot(1, 1);
-        cout << "Вопрос.Вопрос!Вопрос?Вопрос?! (3)"; //для викторины????? Что тут
+        cout << "??????.??????!??????????????! (3)"; //??? ?????????????? ??? ???
         *inputY = 3;
         break;
     case 4:
-        gotoxyBot(1, 1); cout << "Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai uzlādētos.";
-        gotoxyBot(1, 2); cout << "Nospiediet Enter ,lai uzlādētos.";
+        gotoxyBot(1, 1); cout << "Jыsu maроnas akumulators izlвdзjas, bet jums ir nauda ,lai uzlвdзtos.";
+        gotoxyBot(1, 2); cout << "Nospiediet Enter, lai uzlвdзtos.";
         *inputY = 4;
         break;
     case 5:
-        gotoxyBot(1, 1); cout << "Jūsu mašīnas akumulators izlādējas, bet jums ir nauda ,lai izsauktu evakuatoru.";
-        gotoxyBot(1, 2); cout << "Ievadiet uzlādēšanas stacijas indeksu.";
+        gotoxyBot(1, 1); cout << "Jыsu maроnas akumulators izlвdзjas, bet jums ir nauda ,lai izsauktu evakuatoru.";
+        gotoxyBot(1, 2); cout << "Ievadiet uzlвdзрanas stacijas indeksu.";
         *inputY = 4;
         break;
     }
@@ -752,7 +905,7 @@ void tryCharge(int inputY, int* bonusP, float* charge, int Xx)
             return;
         }
         else if (answer[0] == 'N') return;
-        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); }
+        else { clearBotY(inputY, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); }
     }
 }
 
@@ -768,14 +921,14 @@ int evacuator(int* curPos, int bonusP, char objIndex[][objMaxIndexLength], float
         gotoxyBot(1, inputY);
         cin >> answer;
         id = findIndexId(answer, objIndex);
-        if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue; }
-        if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue; }
+        if (id == -1) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); continue; }
+        if (id == *curPos) { clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); continue; }
         if ((int)objIndex[id][0] >= (int)'0' && (int)objIndex[id][0] <= (int)'9' && (int)objIndex[id][1] >= (int)'0' && (int)objIndex[id][1] <= (int)'9')
         {
             if (id == nearestChargeStationId(objIndex, objDistanse, *curPos)) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
             else if (objDistanse[*curPos][id] < 140) { if (namePrice(evacuatorMinPrice, Xx)) { *curPos = id; return evacuatorMinPrice; } }
             else if ((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice) <= bonusP && namePrice((int)(((objDistanse[*curPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice), Xx)) { *curPos = id; return (int)(((objDistanse[bufferCurPos][id] / 140) * chargePrice) + evacuatorMinPrice - chargePrice); }
         }
-        clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieļaujamie dati"); continue;
+        clearBotY(1, Xx); coutxyBot(1, inputY + 2, "Nepieпaujamie dati"); continue;
     }
 }
