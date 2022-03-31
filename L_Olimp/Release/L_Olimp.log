@@ -1,0 +1,20 @@
+﻿  L_Olimp.cpp
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(130,48): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(236,12): warning C4244: return: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(356,19): warning C4244: инициализация: преобразование "time_t" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(359,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(385,72): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(385,64): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(406,43): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(407,30): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(413,47): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(445,49): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(455,49): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(455,93): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(455,85): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\user\source\repos\L_Olimp\L_Olimp.cpp(475,17): warning C4244: инициализация: преобразование "time_t" в "int", возможна потеря данных
+  Создание кода
+  Previous IPDB not found, fall back to full compilation.
+  All 93 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  L_Olimp.vcxproj -> C:\Users\user\source\repos\L_Olimp\Release\L_Olimp.exe
