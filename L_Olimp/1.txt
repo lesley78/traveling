@@ -1,7 +1,7 @@
 Spēles Nosaukums: Tūrisma rallijs Liepāja 2022
 
 Autori: 
-  > Violete Nasire
+  > Violeta Nasire
   > Vadims Žunda
   > Vlads Rumjancevs
   
@@ -13,5 +13,8 @@ Noteikumi:
   5. Lai pareizi atbildētu ir dotas 2 iespējas, par nepareizo atbildi iegustāmo bonuspunktu skaits samazinās.
   6. Par bonuspunktiem spēletajs var apmaksāt lādešanu uzpildes stacijā.
   7. Gadijumā, kad mašīnai beidzas lādiņš jāizsauc evakuators. Evakuators pieprasis ladēšanas stacijas identifikatoru un maksu par apkalpošanu.(spēlētājam atņemas bonuspunkti)
+  8. Ar zaļu krāsu tabulā ir izcelti kontrolpunkti, kuros spēlētājs var doties.
+  9. Ar zilu krāsu tabulā ir izcelts kontrolpunkts, kur spēlētājs atrodas tagat.
+  10. Ar violeto krāsu tabulā ir izceltas uzpildes stacijas, kur spēlētājs var doties ar evakuatoru.
 
 Jānospiež kaut ko, lai sāktu spēli! :)
