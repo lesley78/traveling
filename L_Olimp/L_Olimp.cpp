@@ -518,13 +518,11 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
 
     coutxy(2, 6, "Liels paldies jums, ka spзlзjвt mыsu spзli! ");
     coutxy(2, 8, "Statistika:");
-    coutxy(2, 9, "Palika bonuspunktu:................."); cout << bonusP << "BP";
-    coutxy(2, 10, "Tik bonuspunktu jыs ieguvat:...");
-    coutxy(2, 11, "Palika lвdiņa:..........................."); cout << 100. * charge / maxCharge << "% (" << charge << "km)";
-    coutxy(2, 12, "Tik lвdiņa jыs paterejвt spзlзs laikв:..............");
-    coutxy(2, 13, "Laiks pavadоts spзlз:.................."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
+    coutxy(2, 9,  "Palika bonuspunktu:............."); cout << bonusP << "BP";
+    coutxy(2, 10, "Palika lвdiņa:.................."); cout << 100. * charge / maxCharge << "% (" << charge << "km)";
+    coutxy(2, 11 "Laiks pavadоts spзlз:..........."); cout << (newTime - startTime) / 60 << "min " << (newTime - startTime) % 60 << "sek";
     char name[32];
-    coutxy(2, 15, "Ievadiet savu vвrdu (lоdz 16 simboliem) - "); cin >> name;
+    coutxy(2, 13, "Ievadiet savu vвrdu (lоdz 16 simboliem) - "); cin >> name;
 
 
     char wNames[10][16];
@@ -572,7 +570,7 @@ void endGame(bool win, int bonusP, int bonusPall, int charge, int chargeall, int
     }
 
 
-    coutxy(2, 17, "Nospiediet Enter ,lai redzзtu labвko 10 spзļu topu"); getch();
+    coutxy(2, 15, "Nospiediet Enter ,lai redzзtu labвko 10 spзļu topu"); getch();
 
     clear();
     for (int i = 0; i < 10; i++)
